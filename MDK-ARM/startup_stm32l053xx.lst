@@ -399,14 +399,14 @@ ARM Macro Assembler    Page 7
               00000000 
               00000000 
 Command Line: --debug --xref --diag_suppress=9931 --cpu=Cortex-M0+ --apcs=inter
-work --depend="wifind configuration\startup_stm32l053xx_1.d" -o"wifind configur
-ation\startup_stm32l053xx_1.o" -I"C:\Users\Mingzhi Yu\Documents\Keil\WiFind\MDK
--ARM\RTE" -I"C:\Program Files\Keil_v5\ARM\PACK\ARM\CMSIS\4.3.0\CMSIS\Include" -
-I"C:\Program Files\Keil_v5\ARM\PACK\ARM\CMSIS\4.3.0\CMSIS\RTOS\RTX\INC" -I"C:\P
-rogram Files\Keil_v5\ARM\PACK\Keil\STM32L0xx_DFP\1.3.0\Device\Include" --predef
-ine="__RTX SETA 1" --predefine="__MICROLIB SETA 1" --predefine="__UVISION_VERSI
-ON SETA 516" --predefine="_RTE_ SETA 1" --predefine="STM32L053xx SETA 1" --list
-=startup_stm32l053xx.lst RTE\Device\STM32L053C8\startup_stm32l053xx.s
+work --depend="wifind configuration\startup_stm32l053xx.d" -o"wifind configurat
+ion\startup_stm32l053xx.o" -IC:\Users\cours\keil\WiFind_MCU\MDK-ARM\RTE -IC:\Ke
+il_v5\ARM\PACK\ARM\CMSIS\4.4.0\CMSIS\Include -IC:\Keil_v5\ARM\PACK\ARM\CMSIS\4.
+4.0\CMSIS\RTOS\RTX\INC -IC:\Keil_v5\ARM\PACK\Keil\STM32L0xx_DFP\1.3.0\Device\In
+clude --predefine="__RTX SETA 1" --predefine="__EVAL SETA 1" --predefine="__MIC
+ROLIB SETA 1" --predefine="__UVISION_VERSION SETA 516" --predefine="_RTE_ SETA 
+1" --predefine="STM32L053xx SETA 1" --list=startup_stm32l053xx.lst RTE\Device\S
+TM32L053C8\startup_stm32l053xx.s
 
 
 
@@ -924,4 +924,4 @@ Symbol: __main
       At line 140 in file RTE\Device\STM32L053C8\startup_stm32l053xx.s
 Comment: __main used once
 2 symbols
-388 symbols in table
+389 symbols in table

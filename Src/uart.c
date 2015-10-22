@@ -13,19 +13,45 @@
 UART_HandleTypeDef huart1;
 static const uint8_t TEST_COMMAND [] = "Hello World!";
 static const uint8_t ENTER_COMMAND_MODE [] = "$$$";
-static uint8_t rx_buffer [20];
+static const uint8_t EXIT_COMMAND_MODE [] = "exit";
+static const uint8_t CONNECT_TO_SERVER [] = "open 192.168.1.4 8000";
+static const uint8_t DISCONNECT_FROM_SERVER [] = "close";
+static uint8_t rx_buffer [100];
 // private function protoypes
 static void MX_USART1_UART_Init(void);
 
 // public function
 void uart_thread(void const *argument) {
+	// This function assumes that wireless addresses and such have been set already
   MX_USART1_UART_Init();
 	HAL_StatusTypeDef rx_status;
 	
 	for (;;) {
 		osSignalWait(UART_SEND_COMMAND_SIGNAL, osWaitForever);
-		HAL_UART_Transmit(&huart1, (uint8_t *) ENTER_COMMAND_MODE, sizeof(ENTER_COMMAND_MODE) - 1, 20);  
+		
+		// Enter command mode
+		HAL_Delay(300);
+		HAL_UART_Transmit(&huart1, (uint8_t *) ENTER_COMMAND_MODE, sizeof(ENTER_COMMAND_MODE) - 1, 20);
+		HAL_Delay(300);
 		rx_status = HAL_UART_Receive(&huart1, rx_buffer, 3, 5);
+		HAL_UART_Transmit(&huart1, (uint8_t *) CONNECT_TO_SERVER, sizeof(CONNECT_TO_SERVER) - 1, 20);
+		rx_status = HAL_UART_Receive(&huart1, rx_buffer, 3, 100);
+		HAL_UART_Transmit(&huart1, (uint8_t *) EXIT_COMMAND_MODE, sizeof(EXIT_COMMAND_MODE) - 1, 20);
+		rx_status = HAL_UART_Receive(&huart1, rx_buffer, 4, 100);
+		HAL_Delay(10);
+		
+		// Talk to server
+		HAL_UART_Transmit(&huart1, (uint8_t *) TEST_COMMAND, sizeof(TEST_COMMAND) - 1, 100);
+		// Close connection
+		
+		HAL_Delay(300);
+		HAL_UART_Transmit(&huart1, (uint8_t *) ENTER_COMMAND_MODE, sizeof(ENTER_COMMAND_MODE) - 1, 20);
+		HAL_Delay(300);
+		rx_status = HAL_UART_Receive(&huart1, rx_buffer, 3, 100);
+		HAL_UART_Transmit(&huart1, (uint8_t *) DISCONNECT_FROM_SERVER, sizeof(DISCONNECT_FROM_SERVER) - 1, 20);
+		rx_status = HAL_UART_Receive(&huart1, rx_buffer, 3, 100);
+		HAL_UART_Transmit(&huart1, (uint8_t *) EXIT_COMMAND_MODE, sizeof(EXIT_COMMAND_MODE) - 1, 20);
+		rx_status = HAL_UART_Receive(&huart1, rx_buffer, 4, 100);
   }
 }
 

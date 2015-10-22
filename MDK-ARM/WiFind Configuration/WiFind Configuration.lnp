@@ -12,10 +12,10 @@
 "wifind configuration\stm32l0xx_hal_usart.o"
 "wifind configuration\stm32l0xx_hal_dma.o"
 "wifind configuration\stm32l0xx_hal_uart_ex.o"
-"C:\Program Files\Keil_v5\ARM\PACK\ARM\CMSIS\4.3.0\CMSIS\RTOS\RTX\LIB\ARM\RTX_CM0.lib"
+"C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.4.0\CMSIS\RTOS\RTX\LIB\ARM\RTX_CM0.lib"
 "wifind configuration\rtx_conf_cm.o"
-"wifind configuration\startup_stm32l053xx_1.o"
-"wifind configuration\system_stm32l0xx_1.o"
+"wifind configuration\startup_stm32l053xx.o"
+"wifind configuration\system_stm32l0xx.o"
 --library_type=microlib --strict --scatter "WiFind Configuration\WiFind Configuration.sct"
 --diag_suppress=L6329 --summary_stderr --info summarysizes --map --xref --callgraph --symbols
 --info sizes --info totals --info unused --info veneers
