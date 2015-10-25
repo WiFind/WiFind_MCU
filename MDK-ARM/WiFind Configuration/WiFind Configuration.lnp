@@ -3,6 +3,7 @@
 "wifind configuration\stm32l0xx_hal_msp.o"
 "wifind configuration\stm32l0xx_it.o"
 "wifind configuration\uart.o"
+"wifind configuration\wifi_driver.o"
 "wifind configuration\stm32l0xx_hal.o"
 "wifind configuration\stm32l0xx_hal_rcc_ex.o"
 "wifind configuration\stm32l0xx_hal_rcc.o"
