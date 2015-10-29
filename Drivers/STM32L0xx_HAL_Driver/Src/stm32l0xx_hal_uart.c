@@ -1919,7 +1919,6 @@ HAL_StatusTypeDef UART_WaitOnFlagUntilTimeout(UART_HandleTypeDef *huart, uint32_
       /* Check for the Timeout */
       if(Timeout != HAL_MAX_DELAY)
       {
-				uint32_t tick = HAL_GetTick();
         if((Timeout == 0)||((HAL_GetTick() - tickstart ) > Timeout))
         {
           /* Disable TXE, RXNE, PE and ERR (Frame error, noise error, overrun error) interrupts for the interrupt process */

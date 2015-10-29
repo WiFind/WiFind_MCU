@@ -1,4 +1,4 @@
-wifind configuration\system_stm32l0xx.o: RTE\Device\STM32L053C8\system_stm32l0xx.c
+wifind configuration\system_stm32l0xx.o: ..\Drivers\CMSIS\Device\ST\STM32L0xx\Source\Templates\system_stm32l0xx.c
 wifind configuration\system_stm32l0xx.o: ..\Drivers\CMSIS\Device\ST\STM32L0xx\Include\stm32l0xx.h
 wifind configuration\system_stm32l0xx.o: ..\Drivers\CMSIS\Device\ST\STM32L0xx\Include\stm32l053xx.h
 wifind configuration\system_stm32l0xx.o: ..\Drivers\CMSIS\Include\core_cm0plus.h

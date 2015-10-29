@@ -32,26 +32,37 @@
   */
 /* Includes ------------------------------------------------------------------*/
 #include "stm32l0xx_hal.h"
-#include "stm32l0xx.h"                  // Device header
 #include "cmsis_os.h"
+#include "semphr.h"
 #include "uart.h"
 
+/* USER CODE BEGIN Includes */
+
+/* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
 
+osThreadId defaultTaskHandle, uart_task_handle;
 
+/* USER CODE BEGIN PV */
 /* Private variables ---------------------------------------------------------*/
+
+/* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
-static void SystemClock_Config(void);
+void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
-static void nvic_init(void);
+void StartDefaultTask(void const * argument);
 
-/* Thread IDs here (for now) */
-osThreadDef (uart_thread, osPriorityNormal, 1, 0);
-osThreadId tid_uart;
-
+/* USER CODE BEGIN PFP */
 /* Private function prototypes -----------------------------------------------*/
+
+/* USER CODE END PFP */
+
+/* USER CODE BEGIN 0 */
+
+/* USER CODE END 0 */
+
 int main(void)
 {
 
@@ -60,92 +71,115 @@ int main(void)
   /* USER CODE END 1 */
 
   /* MCU Configuration----------------------------------------------------------*/
-  osKernelInitialize ();                    // initialize CMSIS-RTOS
+
   /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
   HAL_Init();
 
   /* Configure the system clock */
   SystemClock_Config();
-	SystemCoreClockUpdate();
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
-	nvic_init();
+	HAL_NVIC_SetPriority(EXTI0_1_IRQn, 3, 0);
+  HAL_NVIC_EnableIRQ(EXTI0_1_IRQn);
 
-	// create threads
-  tid_uart = osThreadCreate (osThread(uart_thread), NULL);
+  /* USER CODE BEGIN 2 */
 
-  osKernelStart ();                         // start thread execution
+  /* USER CODE END 2 */
 
-  osThreadTerminate (osThreadGetId ());     // terminate main thread
+  /* USER CODE BEGIN RTOS_MUTEX */
+  /* add mutexes, ... */
+  /* USER CODE END RTOS_MUTEX */
+
+  /* USER CODE BEGIN RTOS_SEMAPHORES */
+  /* add semaphores, ... */
+  /* USER CODE END RTOS_SEMAPHORES */
+
+  /* USER CODE BEGIN RTOS_TIMERS */
+  /* start timers, add new ones, ... */
+  /* USER CODE END RTOS_TIMERS */
+
+  /* Create the thread(s) */
+  /* definition and creation of defaultTask */
+  //osThreadDef(defaultTask, StartDefaultTask, osPriorityNormal, 0, 128);
+  //defaultTaskHandle = osThreadCreate(osThread(defaultTask), NULL);
+	
+	osThreadDef(uart_task, uart_thread, osPriorityNormal, 0, 500);
+	uart_task_handle = osThreadCreate(osThread(uart_task), NULL);
+
+  /* USER CODE BEGIN RTOS_THREADS */
+  /* add threads, ... */
+  /* USER CODE END RTOS_THREADS */
+
+  /* USER CODE BEGIN RTOS_QUEUES */
+  /* add queues, ... */
+  /* USER CODE END RTOS_QUEUES */
+ 
+
+  /* Start scheduler */
+  osKernelStart(NULL, NULL);
+  
+  /* We should never get here as control is now taken by the scheduler */
+
+  /* Infinite loop */
+  /* USER CODE BEGIN WHILE */
+  while (1)
+  {
+  /* USER CODE END WHILE */
+
+  /* USER CODE BEGIN 3 */
+
+  }
+  /* USER CODE END 3 */
+
 }
 
 /** System Clock Configuration
 */
-static void SystemClock_Config(void)
+void SystemClock_Config(void)
 {
-  RCC->CR |= ((uint32_t)RCC_CR_HSION);                     // Enable HSI
-  while ((RCC->CR & RCC_CR_HSIRDY) == 0);                  // Wait for HSI Ready
 
-  RCC->CFGR = RCC_CFGR_SW_HSI;                             // HSI is system clock
-  while ((RCC->CFGR & RCC_CFGR_SWS) != RCC_CFGR_SWS_HSI);  // Wait for HSI used as system clock
+  RCC_OscInitTypeDef RCC_OscInitStruct;
+  RCC_ClkInitTypeDef RCC_ClkInitStruct;
+  RCC_PeriphCLKInitTypeDef PeriphClkInit;
 
-  // PLL configuration: PLLCLK = (HSI * 6)/3 = 32 MHz
-  RCC->CFGR &= ~(RCC_CFGR_PLLSRC |
-                 RCC_CFGR_PLLMUL |
-                 RCC_CFGR_PLLDIV  );
-  RCC->CFGR |=  (RCC_CFGR_PLLSRC_HSI |
-                 RCC_CFGR_PLLMUL4    |
-                 RCC_CFGR_PLLDIV2     );
+  __PWR_CLK_ENABLE();
 
-  FLASH->ACR |= FLASH_ACR_PRFTEN;                          // Enable Prefetch Buffer
-  FLASH->ACR |= FLASH_ACR_LATENCY;                         // Flash 1 wait state
+  __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE1);
 
-  RCC->APB1ENR |= RCC_APB1ENR_PWREN;                       // Enable the PWR APB1 Clock
-  PWR->CR = PWR_CR_VOS_0;                                  // Select the Voltage Range 1 (1.8V)
-  while((PWR->CSR & PWR_CSR_VOSF) != 0);                   // Wait for Voltage Regulator Ready
+  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
+  RCC_OscInitStruct.HSIState = RCC_HSI_ON;
+  RCC_OscInitStruct.HSICalibrationValue = 16;
+  RCC_OscInitStruct.PLL.PLLState = RCC_PLL_NONE;
+  HAL_RCC_OscConfig(&RCC_OscInitStruct);
 
-  RCC->CFGR |= RCC_CFGR_HPRE_DIV1;                         // HCLK = SYSCLK
-  RCC->CFGR |= RCC_CFGR_PPRE1_DIV1;                        // PCLK1 = HCLK
-  RCC->CFGR |= RCC_CFGR_PPRE2_DIV1;                        // PCLK2 = HCLK
+  RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_SYSCLK;
+  RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_HSI;
+  RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
+  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;
+  RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
+  HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_0);
 
-  RCC->CR &= ~RCC_CR_PLLON;                                // Disable PLL
+  PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_USART1;
+  PeriphClkInit.Usart1ClockSelection = RCC_USART1CLKSOURCE_PCLK2;
+  HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit);
 
-  RCC->CR |= RCC_CR_PLLON;                                 // Enable PLL
-  while((RCC->CR & RCC_CR_PLLRDY) == 0) __NOP();           // Wait till PLL is ready
+  HAL_SYSTICK_Config(HAL_RCC_GetHCLKFreq()/1000);
 
-  RCC->CFGR &= ~RCC_CFGR_SW;                               // Select PLL as system clock source
-  RCC->CFGR |=  RCC_CFGR_SW_PLL;
-  while ((RCC->CFGR & RCC_CFGR_SWS) != RCC_CFGR_SWS_PLL);  // Wait till PLL is system clock src
+  HAL_SYSTICK_CLKSourceConfig(SYSTICK_CLKSOURCE_HCLK);
 
   /* SysTick_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(SysTick_IRQn, 0, 0);
 }
 
-/**
-  * @brief  Initialize NVIC here.
-  * @param  None
-  * @retval None
-  */
-static void nvic_init(void)
-{
-  /* Enable and set EXTI4_15 Interrupt to the lowest priority */
-  HAL_NVIC_SetPriority(EXTI0_1_IRQn, 3, 0);
-  HAL_NVIC_EnableIRQ(EXTI0_1_IRQn);
-}
 
-/**
-  * @brief EXTI line detection callback.
-  * @param GPIO_Pin: Specifies the pins connected EXTI line
-  * @retval None
-  */
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
   if(GPIO_Pin == GPIO_PIN_0)
   {
     /* Toggle Green LED */
     HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_4);
-		osSignalSet(tid_uart, UART_SEND_COMMAND_SIGNAL);
+		xSemaphoreGiveFromISR(button_sem, NULL);
   }
   
 }
@@ -157,7 +191,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
         * EVENT_OUT
         * EXTI
 */
-static void MX_GPIO_Init(void)
+void MX_GPIO_Init(void)
 {
 
   GPIO_InitTypeDef GPIO_InitStruct;
@@ -186,18 +220,24 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_LOW;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
-  /* Configure PA0 pin as input floating */
-  GPIO_InitStruct.Mode = GPIO_MODE_IT_FALLING;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Pin = GPIO_PIN_0;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FAST;
-  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
-	
 }
 
 /* USER CODE BEGIN 4 */
 
 /* USER CODE END 4 */
+
+/* StartDefaultTask function */
+void StartDefaultTask(void const * argument)
+{
+
+  /* USER CODE BEGIN 5 */
+  /* Infinite loop */
+  for(;;)
+  {
+    osDelay(1);
+  }
+  /* USER CODE END 5 */ 
+}
 
 #ifdef USE_FULL_ASSERT
 

@@ -52,7 +52,6 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32l0xx_hal.h"
-#include "cmsis_os.h"
 
 /** @addtogroup STM32L0xx_HAL_Driver
   * @{
@@ -292,7 +291,7 @@ __weak void HAL_IncTick(void)
   */
 __weak uint32_t HAL_GetTick(void)
 {
-  return ((uint64_t) osKernelSysTick()) * 1000 / osKernelSysTickFrequency;
+  return uwTick;
 }
 
 /**

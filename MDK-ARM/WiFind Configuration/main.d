@@ -26,6 +26,3 @@ wifind configuration\main.o: ..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_hal_p
 wifind configuration\main.o: ..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_hal_pwr_ex.h
 wifind configuration\main.o: ..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_hal_uart.h
 wifind configuration\main.o: ..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0xx_hal_uart_ex.h
-wifind configuration\main.o: C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.4.0\CMSIS\RTOS\RTX\INC\cmsis_os.h
-wifind configuration\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
-wifind configuration\main.o: ..\Inc\uart.h

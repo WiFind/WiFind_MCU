@@ -21,85 +21,39 @@ Target DLL:      STLink\ST-LINKIII-KEIL_SWO.dll V2.0.17.0
 Dialog DLL:      TCM.DLL V1.14.5.0
  
 <h2>Project:</h2>
-C:\Users\cours\keil\WiFind_MCU\MDK-ARM\WiFind.uvprojx
-Project File Date:  10/24/2015
+C:\Users\cours\keil\WiFind_MCU - Copy\MDK-ARM\WiFind.uvprojx
+Project File Date:  10/26/2015
 
 <h2>Output:</h2>
 *** Using Compiler 'V5.06 (build 20)', folder: 'C:\Keil_v5\ARM\ARMCC\Bin'
 Build target 'WiFind Configuration'
+compiling stm32l0xx_hal_msp.c...
+compiling stm32l0xx_it.c...
 compiling uart.c...
-..\Src\uart.c(30): warning:  #177-D: variable "rx_status" was declared but never referenced
+..\Src\uart.c(55): warning:  #177-D: variable "rx_status" was declared but never referenced
   	HAL_StatusTypeDef rx_status;
-..\Src\uart.c(39): warning:  #550-D: variable "rx_status" was set but never used
+..\Src\uart.c(67): warning:  #550-D: variable "rx_status" was set but never used
   	HAL_StatusTypeDef rx_status;
-..\Src\uart.c(17): warning:  #177-D: variable "CONNECT_TO_SERVER" was declared but never referenced
-  static const uint8_t CONNECT_TO_SERVER [] = "open 192.168.1.4 8000";
-..\Src\uart.c(18): warning:  #177-D: variable "DISCONNECT_FROM_SERVER" was declared but never referenced
-  static const uint8_t DISCONNECT_FROM_SERVER [] = "close";
-..\Src\uart.c(19): warning:  #177-D: variable "SET_AUTHENTICATION" was declared but never referenced
-  static const uint8_t SET_AUTHENTICATION [] = "set wlan auth 4";
-..\Src\uart.c(20): warning:  #177-D: variable "SET_SSID" was declared but never referenced
-  static const uint8_t SET_SSID [] = "set wlan ssid WiFind";
-..\Src\uart.c(21): warning:  #177-D: variable "SET_PASSPHRASE" was declared but never referenced
-  static const uint8_t SET_PASSPHRASE [] = "set wlan pass WiFind11";
-..\Src\uart.c(22): warning:  #177-D: variable "SET_JOIN_MODE" was declared but never referenced
-  static const uint8_t SET_JOIN_MODE [] = "set wlan join 1";
-..\Src\uart.c(23): warning:  #177-D: variable "SAVE" was declared but never referenced
-  static const uint8_t SAVE [] = "save";
-..\Src\uart.c(24): warning:  #177-D: variable "REBOOT" was declared but never referenced
-  static const uint8_t REBOOT [] = "reboot";
-..\Src\uart.c: 10 warnings, 0 errors
+..\Src\uart.c(37): warning:  #177-D: variable "EXIT_COMMAND_MODE" was declared but never referenced
+  static const uint8_t EXIT_COMMAND_MODE [] = "exit\r\n";
+..\Src\uart.c(39): warning:  #177-D: variable "DISCONNECT_FROM_SERVER" was declared but never referenced
+  static const uint8_t DISCONNECT_FROM_SERVER [] = "close\r\n";
+..\Src\uart.c: 4 warnings, 0 errors
+compiling main.c...
 linking...
-Program Size: Code=10140 RO-data=496 RW-data=132 ZI-data=3556  
-"WiFind Configuration\WiFind Configuration.axf" - 0 Error(s), 10 Warning(s).
-
-<h2>Software Packages used:</h2>
-
-Package Vendor: ARM
-                http://www.keil.com/pack/ARM.CMSIS.4.4.0.pack
-                ::CMSIS:RTOS:1.0 (API)
-                CMSIS (Cortex Microcontroller Software Interface Standard)
-   * Component: RTOS Version: 1.0
-   * Component: CORE Version: 4.2.0
-   * Component: Keil RTX Version: 4.79.0
-
-Package Vendor: Keil
-                http://www.keil.com/pack/Keil.STM32L0xx_DFP.1.3.0.pack
-                Keil::Device:Startup:1.0.0
-                STMicroelectronics STM32L0 Series Device Support and Examples
-   * Component: Startup Version: 1.0.0
+WiFind Configuration\WiFind Configuration.axf: Warning: L6304W: Duplicate input file wifind configuration\stm32l0xx_hal_msp_1.o ignored.
+WiFind Configuration\WiFind Configuration.axf: Warning: L6304W: Duplicate input file wifind configuration\stm32l0xx_it_1.o ignored.
+WiFind Configuration\WiFind Configuration.axf: Warning: L6304W: Duplicate input file wifind configuration\main_1.o ignored.
+Program Size: Code=11680 RO-data=472 RW-data=156 ZI-data=4548  
+Finished: 0 information, 3 warning and 0 error messages.
+"WiFind Configuration\WiFind Configuration.axf" - 0 Error(s), 7 Warning(s).
 
 <h2>Collection of Component include folders:</h2>
-  C:\Users\cours\keil\WiFind_MCU\MDK-ARM\RTE
-  C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.4.0\CMSIS\Include
-  C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.4.0\CMSIS\RTOS\RTX\INC
+  C:\Users\cours\keil\WiFind_MCU - Copy\MDK-ARM\RTE
   C:\Keil_v5\ARM\PACK\Keil\STM32L0xx_DFP\1.3.0\Device\Include
 
 <h2>Collection of Component Files used:</h2>
-
-   * Component: ::CMSIS:RTOS:1.0 (API)
-
-   * Component: ARM::CMSIS:CORE:4.2.0
-
-   * Component: ARM::CMSIS:RTOS:Keil RTX:4.79.0
-      Source file:   CMSIS\RTOS\RTX\UserCodeTemplates\MailQueue.c
-      Source file:   CMSIS\RTOS\RTX\UserCodeTemplates\Mutex.c
-      Source file:   CMSIS\RTOS\RTX\UserCodeTemplates\main.c
-      Source file:   CMSIS\RTOS\RTX\UserCodeTemplates\Timer.c
-      Include file:  CMSIS\RTOS\RTX\INC\cmsis_os.h
-      Source file:   CMSIS\RTOS\RTX\UserCodeTemplates\MemPool.c
-      Source file:   CMSIS\RTOS\RTX\UserCodeTemplates\Semaphore.c
-      Source file:   CMSIS\RTOS\RTX\UserCodeTemplates\MsgQueue.c
-      Source file:   CMSIS\RTOS\RTX\Templates\RTX_Conf_CM.c
-      Source file:   CMSIS\RTOS\RTX\SRC\ARM\SVC_Table.s
-      Library file:  CMSIS\RTOS\RTX\LIB\ARM\RTX_CM0.lib
-      Include file:  CMSIS\RTOS\RTX\UserCodeTemplates\osObjects.h
-      Source file:   CMSIS\RTOS\RTX\UserCodeTemplates\Thread.c
-
-   * Component: Keil::Device:Startup:1.0.0
-      Source file:   Device\Source\system_stm32l0xx.c
-      Source file:   Device\Source\ARM\startup_stm32l053xx.s
-Build Time Elapsed:  00:00:00
+Build Time Elapsed:  00:00:01
 </pre>
 </body>
 </html>
