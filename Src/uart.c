@@ -189,7 +189,7 @@ void uart_thread(void const *argument) {
 		send_command(SET_SSID, sizeof(SET_SSID) - 1, 2);
 		osDelay(300);
 		send_command(SET_PASSPHRASE, sizeof(SET_PASSPHRASE) - 1, 2);
-		osDelay(300);
+		osDelay(800);
 		send_command(SET_JOIN_MODE, sizeof(SET_JOIN_MODE) - 1, 2);
 		osDelay(300);
 		send_command(SET_DHCP, sizeof(SET_DHCP) -1, 2);
@@ -198,7 +198,7 @@ void uart_thread(void const *argument) {
 		osDelay(300);
 		send_command(REBOOT, sizeof(REBOOT) - 1, 0);
 		osDelay(300);
-		rx_status = HAL_UART_Receive(&huart1, (uint8_t *) buf, 8, 500);
+		//rx_status = HAL_UART_Receive(&huart1, (uint8_t *) buf, 8, 500);
 		osDelay(100);
 		
 		osDelay(300);
@@ -206,13 +206,13 @@ void uart_thread(void const *argument) {
 		HAL_UART_Transmit(&huart1, (uint8_t *) ENTER_COMMAND_MODE, sizeof(ENTER_COMMAND_MODE) - 1, 1000);
 		osDelay(500);
 		__HAL_UART_CLEAR_IT(&huart1, UART_CLEAR_OREF);
-    	__HAL_UART_SEND_REQ(&huart1, UART_RXDATA_FLUSH_REQUEST);
+    __HAL_UART_SEND_REQ(&huart1, UART_RXDATA_FLUSH_REQUEST);
 
 		int sizeofscan = send_scan_command();
 		send_command(JOIN_WIFIND, sizeof(JOIN_WIFIND) - 1, 12);
 		//__HAL_UART_CLEAR_IT(&huart1, UART_CLEAR_OREF);
 		//__HAL_UART_SEND_REQ(&huart1, UART_RXDATA_FLUSH_REQUEST);
-		osDelay(5000);
+		osDelay(15000);
 		send_command(CONNECT_TO_SERVER, sizeof(CONNECT_TO_SERVER) - 1, 1);
 		//__HAL_UART_CLEAR_IT(&huart1, UART_CLEAR_OREF);
 	  //__HAL_UART_SEND_REQ(&huart1, UART_RXDATA_FLUSH_REQUEST);
