@@ -45,7 +45,9 @@ static const uint8_t SET_JOIN_MODE [] = "set wlan join 0\r\n";
 static const uint8_t SAVE [] = "save\r\n";
 static const uint8_t REBOOT [] = "reboot\r\n";
 static const uint8_t JOIN_WIFIND [] = "join WiFind\r\n";
-static uint8_t rx_buffer [100];
+static const uint8_t SLEEP [] = "sleep\r\n";
+static const uint8_t SCAN [] = "scan 20\r\n";
+static uint8_t rx_buffer [2000];
 // private function protoypes
 static void MX_USART1_UART_Init(void);
 
@@ -53,9 +55,13 @@ xSemaphoreHandle button_sem;
 
 void send_command(const uint8_t * command, size_t size) {
 	HAL_StatusTypeDef rx_status;
-	HAL_UART_Transmit(&huart1, (uint8_t *) command, size, 1000);
-	osDelay(500);
-	//rx_status = HAL_UART_Receive(&huart1, rx_buffer, 3, 5);
+	for (size_t i = 0; i < size; i++) {
+		HAL_UART_Transmit(&huart1, (uint8_t *) command + i, 1, 20);
+		rx_status = HAL_UART_Receive(&huart1, rx_buffer + i, 1, 20);
+	}
+	rx_status = HAL_UART_Receive(&huart1, rx_buffer + size, 1, 20);
+	
+	rx_status = HAL_UART_Receive(&huart1, rx_buffer + size + 1, 13, 1000);
 }
 
 // public function
@@ -71,24 +77,33 @@ void uart_thread(void const *argument) {
 		osDelay(1000);
 		HAL_UART_Transmit(&huart1, (uint8_t *) ENTER_COMMAND_MODE, sizeof(ENTER_COMMAND_MODE) - 1, 1000);
 		//HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_4);
-		rx_status = HAL_UART_Receive(&huart1, (uint8_t *) rx_buffer, 5, 400);
+		//osDelay(500);
+		rx_status = HAL_UART_Receive(&huart1, (uint8_t *) rx_buffer, 5, 500);
+		
+		//HAL_UART_Transmit(&huart1, (uint8_t *) SCAN, sizeof(SCAN) - 1, 1000);
+		//osDelay(4000);
+		//HAL_UART_Transmit(&huart1, (uint8_t *) "h", 1, 10);
+		//HAL_UART_Receive(&huart1, rx_buffer, 1, 20);
+		
+		//HAL_UART_Transmit(&huart1, (uint8_t *) "hi12", 4, 20);
+		//HAL_UART_Receive(&huart1, rx_buffer + 1, 4, 40); 
+		//rx_status = HAL_UART_Receive(&huart1, (uint8_t *) rx_buffer, 5, 10000);
+		
+		
+		//huart1.State = HAL_UART_STATE_READY;
+		
 		//HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_4);
-		//HAL_UART_Transmit(&huart1, (uint8_t *) TEST_COMMAND, sizeof(TEST_COMMAND) - 1, 1000); 
-		//osDelay(200);
-		//send_command(SET_AUTHENTICATION, sizeof(SET_AUTHENTICATION) - 1);
-		// Enter command mode
-//		HAL_Delay(300);
-//		HAL_UART_Transmit(&huart1, (uint8_t *) ENTER_COMMAND_MODE, sizeof(ENTER_COMMAND_MODE) - 1, 20);
-//		HAL_Delay(300);
-//		rx_status = HAL_UART_Receive(&huart1, rx_buffer, 3, 5);
-//		
+		
+		
+		//send_command(SLEEP, sizeof(SLEEP) - 1);
+		
 		send_command(SET_AUTHENTICATION, sizeof(SET_AUTHENTICATION) - 1);
 		send_command(SET_SSID, sizeof(SET_SSID) - 1);
 		send_command(SET_PASSPHRASE, sizeof(SET_PASSPHRASE) - 1);
 		send_command(SET_JOIN_MODE, sizeof(SET_JOIN_MODE) - 1);
 		send_command(SET_DHCP, sizeof(SET_DHCP) -1);
-		send_command(SAVE, sizeof(SAVE) - 1);
-		send_command(REBOOT, sizeof(REBOOT) - 1);
+
+		/*
 		osDelay(300);
 		send_command(ENTER_COMMAND_MODE, sizeof(ENTER_COMMAND_MODE) - 1);
 		send_command(JOIN_WIFIND, sizeof(JOIN_WIFIND) - 1);
@@ -96,6 +111,8 @@ void uart_thread(void const *argument) {
 		send_command(CONNECT_TO_SERVER, sizeof(CONNECT_TO_SERVER) - 1);
 		osDelay(300);
 		send_command(TEST_COMMAND, sizeof(TEST_COMMAND) - 1);
+		*/
+		
 //		HAL_UART_Transmit(&huart1, (uint8_t *) CONNECT_TO_SERVER, sizeof(CONNECT_TO_SERVER) - 1, 20);
 //		rx_status = HAL_UART_Receive(&huart1, rx_buffer, 3, 100);
 //		HAL_UART_Transmit(&huart1, (uint8_t *) EXIT_COMMAND_MODE, sizeof(EXIT_COMMAND_MODE) - 1, 20);
