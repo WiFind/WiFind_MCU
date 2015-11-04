@@ -36,7 +36,7 @@ UART_HandleTypeDef huart1;
 static const uint8_t TEST_COMMAND [] = "Hello World!";
 static const uint8_t ENTER_COMMAND_MODE [] = "$$$";
 static const uint8_t EXIT_COMMAND_MODE [] = "exit\r\n";
-static const uint8_t CONNECT_TO_SERVER [] = "open 192.168.1.4 8000\r\n";
+static const uint8_t CONNECT_TO_SERVER [] = "open 192.168.1.128 8000\r\n";
 static const uint8_t DISCONNECT_FROM_SERVER [] = "close\r\n";
 static const uint8_t SET_DHCP [] = "set ip dhcp 1\r\n";
 static const uint8_t SET_AUTHENTICATION [] = "set wlan auth 4\r\n";
@@ -48,12 +48,29 @@ static const uint8_t REBOOT [] = "reboot\r\n";
 static const uint8_t JOIN_WIFIND [] = "join WiFind\r\n";
 static const uint8_t SLEEP [] = "sleep\r\n";
 static const uint8_t SCAN [] = "scan 10\r\n";
+static uint8_t head[10];
 static uint8_t buf[10];
 static uint8_t rx_buffer [2000];
 // private function protoypes
 static void MX_USART1_UART_Init(void);
 
 xSemaphoreHandle button_sem;
+/*
+ * priority 1 is emergency, 2 is periodic message, size is the size of scan fingerprint
+ * return the size of the char
+ */
+int head_pkt(uint8_t priority, int sizeofscan){
+	head[0] = priority;
+	int ret = 1;
+	while (sizeofscan){
+		head[ret] = '0' + sizeofscan%10;
+		sizeofscan = sizeofscan/10;
+		ret++;
+	}
+	head[ret] = '\0';
+	ret++;
+	return ret;
+}
 
 void receive_redudantline() {
 	HAL_StatusTypeDef rx_status;
@@ -143,8 +160,8 @@ void uart_thread(void const *argument) {
 		osDelay(1000);
 		
 		HAL_UART_Transmit(&huart1, (uint8_t *) ENTER_COMMAND_MODE, sizeof(ENTER_COMMAND_MODE) - 1, 1000);
-		__HAL_UART_CLEAR_IT(&huart1, UART_CLEAR_OREF);
-    __HAL_UART_SEND_REQ(&huart1, UART_RXDATA_FLUSH_REQUEST);
+		//__HAL_UART_CLEAR_IT(&huart1, UART_CLEAR_OREF);
+    //__HAL_UART_SEND_REQ(&huart1, UART_RXDATA_FLUSH_REQUEST);
 
 		//HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_4);
 		//osDelay(500);
@@ -194,6 +211,8 @@ void uart_thread(void const *argument) {
 		//__HAL_UART_CLEAR_IT(&huart1, UART_CLEAR_OREF);
 	  //__HAL_UART_SEND_REQ(&huart1, UART_RXDATA_FLUSH_REQUEST);
 		osDelay(300);
+		int sizeofhead = head_pkt(2, sizeofscan);
+		HAL_UART_Transmit(&huart1, (uint8_t *) head, sizeofhead, 1000);
 		HAL_UART_Transmit(&huart1, (uint8_t *) rx_buffer, sizeofscan, 1000);
 		osDelay(300);
 
