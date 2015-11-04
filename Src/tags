@@ -1,0 +1,68 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.8	//
+CONNECT_TO_SERVER	.\uart.c	/^static const uint8_t CONNECT_TO_SERVER [] = "open 192.168.1.4 8000\\r\\n";$/;"	v	file:
+CONNECT_TO_SERVER	.\wifi_driver.c	/^static const uint8_t CONNECT_TO_SERVER [] = "open %s %s\\r\\n";$/;"	v	file:
+CONNECT_TO_WIFI	.\wifi_driver.c	/^static const uint8_t CONNECT_TO_WIFI [] = "join %s\\r\\n";$/;"	v	file:
+DISCONNECT_FROM_SERVER	.\uart.c	/^static const uint8_t DISCONNECT_FROM_SERVER [] = "close\\r\\n";$/;"	v	file:
+DISCONNECT_FROM_SERVER	.\wifi_driver.c	/^static const uint8_t DISCONNECT_FROM_SERVER [] = "close\\r\\n";$/;"	v	file:
+ENTER_COMMAND_MODE	.\uart.c	/^static const uint8_t ENTER_COMMAND_MODE [] = "$$$";$/;"	v	file:
+ENTER_COMMAND_MODE	.\wifi_driver.c	/^static const uint8_t ENTER_COMMAND_MODE [] = "$$$";$/;"	v	file:
+EXIT_COMMAND_MODE	.\uart.c	/^static const uint8_t EXIT_COMMAND_MODE [] = "exit\\r\\n";$/;"	v	file:
+EXIT_COMMAND_MODE	.\wifi_driver.c	/^static const uint8_t EXIT_COMMAND_MODE [] = "exit\\r\\n";$/;"	v	file:
+EXTI0_1_IRQHandler	.\stm32l0xx_it.c	/^void EXTI0_1_IRQHandler(void)$/;"	f	signature:(void)
+HAL_GPIO_EXTI_Callback	.\main.c	/^void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)$/;"	f	signature:(uint16_t GPIO_Pin)
+HAL_MspInit	.\stm32l0xx_hal_msp.c	/^void HAL_MspInit(void)$/;"	f	signature:(void)
+HAL_UART_MspDeInit	.\stm32l0xx_hal_msp.c	/^void HAL_UART_MspDeInit(UART_HandleTypeDef* huart)$/;"	f	signature:(UART_HandleTypeDef* huart)
+HAL_UART_MspInit	.\stm32l0xx_hal_msp.c	/^void HAL_UART_MspInit(UART_HandleTypeDef* huart)$/;"	f	signature:(UART_HandleTypeDef* huart)
+JOIN_WIFIND	.\uart.c	/^static const uint8_t JOIN_WIFIND [] = "join WiFind\\r\\n";$/;"	v	file:
+MX_GPIO_Init	.\main.c	/^void MX_GPIO_Init(void)$/;"	f	signature:(void)
+MX_USART1_UART_Init	.\uart.c	/^static void MX_USART1_UART_Init(void)$/;"	f	file:	signature:(void)
+MX_USART1_UART_Init	.\wifi_driver.c	/^static void MX_USART1_UART_Init(void)$/;"	f	file:	signature:(void)
+REBOOT	.\uart.c	/^static const uint8_t REBOOT [] = "reboot\\r\\n";$/;"	v	file:
+REBOOT	.\wifi_driver.c	/^static const uint8_t REBOOT [] = "reboot\\r\\n";$/;"	v	file:
+RX_BUF_SIZE	.\wifi_driver.c	11;"	d	file:
+SAVE	.\uart.c	/^static const uint8_t SAVE [] = "save\\r\\n";$/;"	v	file:
+SAVE	.\wifi_driver.c	/^static const uint8_t SAVE [] = "save\\r\\n";$/;"	v	file:
+SCAN	.\uart.c	/^static const uint8_t SCAN [] = "scan 20\\r\\n";$/;"	v	file:
+SET_AUTHENTICATION	.\uart.c	/^static const uint8_t SET_AUTHENTICATION [] = "set wlan auth 4\\r\\n";$/;"	v	file:
+SET_AUTHENTICATION	.\wifi_driver.c	/^static const uint8_t SET_AUTHENTICATION [] = "set wlan auth 4\\r\\n";$/;"	v	file:
+SET_DHCP	.\uart.c	/^static const uint8_t SET_DHCP [] = "set ip dhcp 1\\r\\n";$/;"	v	file:
+SET_JOIN_MODE	.\uart.c	/^static const uint8_t SET_JOIN_MODE [] = "set wlan join 0\\r\\n";$/;"	v	file:
+SET_JOIN_MODE	.\wifi_driver.c	/^static const uint8_t SET_JOIN_MODE [] = "set wlan join 0\\r\\n";$/;"	v	file:
+SET_PASSPHRASE	.\uart.c	/^static const uint8_t SET_PASSPHRASE [] = "set wlan pass WiFind11\\r\\n";$/;"	v	file:
+SET_PASSPHRASE	.\wifi_driver.c	/^static const uint8_t SET_PASSPHRASE [] = "set wlan pass %s\\r\\n";$/;"	v	file:
+SET_SERVER_IP	.\wifi_driver.c	/^static const uint8_t SET_SERVER_IP [] = "set ip host %s\\r\\n";$/;"	v	file:
+SET_SERVER_PORT	.\wifi_driver.c	/^static const uint8_t SET_SERVER_PORT [] = "set ip remote %s\\r\\n";$/;"	v	file:
+SET_SSID	.\uart.c	/^static const uint8_t SET_SSID [] = "set wlan ssid WiFind\\r\\n";$/;"	v	file:
+SLEEP	.\uart.c	/^static const uint8_t SLEEP [] = "sleep\\r\\n";$/;"	v	file:
+StartDefaultTask	.\main.c	/^void StartDefaultTask(void const * argument)$/;"	f	signature:(void const * argument)
+SysTick_Handler	.\stm32l0xx_it.c	/^void SysTick_Handler(void)$/;"	f	signature:(void)
+SystemClock_Config	.\main.c	/^void SystemClock_Config(void)$/;"	f	signature:(void)
+TEST_COMMAND	.\uart.c	/^static const uint8_t TEST_COMMAND [] = "Hello World!";$/;"	v	file:
+TEST_COMMAND	.\wifi_driver.c	/^static const uint8_t TEST_COMMAND [] = "Hello World!";$/;"	v	file:
+assert_failed	.\main.c	/^void assert_failed(uint8_t* file, uint32_t line)$/;"	f	signature:(uint8_t* file, uint32_t line)
+button_sem	.\uart.c	/^xSemaphoreHandle button_sem;$/;"	v
+clear_buffer	.\wifi_driver.c	/^static void clear_buffer() {$/;"	f	file:
+connect_to_server	.\wifi_driver.c	/^void connect_to_server(uint8_t *ip, uint8_t *port) {$/;"	f	signature:(uint8_t *ip, uint8_t *port)
+connect_to_wifi	.\wifi_driver.c	/^void connect_to_wifi(uint8_t *ssid, uint8_t *pass) {$/;"	f	signature:(uint8_t *ssid, uint8_t *pass)
+defaultTaskHandle	.\main.c	/^osThreadId defaultTaskHandle, uart_task_handle;$/;"	v
+enter_command_mode	.\wifi_driver.c	/^void enter_command_mode() {$/;"	f
+exit_command_mode	.\wifi_driver.c	/^void exit_command_mode() {$/;"	f
+huart1	.\uart.c	/^UART_HandleTypeDef huart1;$/;"	v
+huart1	.\wifi_driver.c	/^UART_HandleTypeDef huart1;$/;"	v
+init_wifi	.\wifi_driver.c	/^void init_wifi() {$/;"	f
+main	.\main.c	/^int main(void)$/;"	f	signature:(void)
+reboot	.\wifi_driver.c	/^void reboot() {$/;"	f
+reinit_uart	.\wifi_driver.c	/^static void reinit_uart() {$/;"	f	file:
+rx_buffer	.\uart.c	/^static uint8_t rx_buffer [2000];$/;"	v	file:
+rx_buffer	.\wifi_driver.c	/^uint8_t rx_buffer[RX_BUF_SIZE];$/;"	v
+scan_wifi	.\wifi_driver.c	/^void scan_wifi() {$/;"	f
+send_command	.\uart.c	/^void send_command(const uint8_t * command, size_t size) {$/;"	f	signature:(const uint8_t * command, size_t size)
+send_scan_command	.\uart.c	/^int send_scan_command(void) {$/;"	f	signature:(void)
+set_command	.\wifi_driver.c	/^void set_command(const uint8_t* command, uint8_t size, uint32_t timeout) {$/;"	f	signature:(const uint8_t* command, uint8_t size, uint32_t timeout)
+uart_task_handle	.\main.c	/^osThreadId defaultTaskHandle, uart_task_handle;$/;"	v
+uart_thread	.\uart.c	/^void uart_thread(void const *argument) {$/;"	f	signature:(void const *argument)

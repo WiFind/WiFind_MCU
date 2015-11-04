@@ -53,13 +53,23 @@ void init_wifi() {
 	uint8_t pass_cmd[50];
 	uint8_t ip_cmd[50];
 	uint8_t port_cmd[50];
-	
+
 	MX_USART1_UART_Init();
 	enter_command_mode();
-	set_command(SET_AUTHENTICATION, sizeof(SET_AUTHENTICATION) - 1, 100);
-	set_command(SET_JOIN_MODE, sizeof(SET_JOIN_MODE) - 1, 100);
-	set_command(SAVE, sizeof(SAVE) - 1, 100);
-	//send_command(REBOOT, sizeof(REBOOT) - 1, 1000);
+    send_command(SET_AUTHENTICATION, sizeof(SET_AUTHENTICATION) - 1);
+    send_command(SET_SSID, sizeof(SET_SSID) - 1);
+    send_command(SET_PASSPHRASE, sizeof(SET_PASSPHRASE) - 1);
+    send_command(SET_JOIN_MODE, sizeof(SET_JOIN_MODE) - 1);
+    send_command(SET_DHCP, sizeof(SET_DHCP) -1);
+    send_command(SAVE, sizeof(SAVE) - 1);
+    send_command(REBOOT, sizeof(REBOOT) - 1);
+    osDelay(300);
+    send_command(ENTER_COMMAND_MODE, sizeof(ENTER_COMMAND_MODE) - 1);
+    send_command(JOIN_WIFIND, sizeof(JOIN_WIFIND) - 1);
+    osDelay(6000);
+    send_command(CONNECT_TO_SERVER, sizeof(CONNECT_TO_SERVER) - 1);
+    osDelay(300);
+    send_command(TEST_COMMAND, sizeof(TEST_COMMAND) - 1);
 }
 
 static void reinit_uart() {
@@ -81,7 +91,7 @@ void set_command(const uint8_t* command, uint8_t size, uint32_t timeout) {
 void enter_command_mode() {
 	osDelay(300);
 	HAL_UART_Transmit(&huart1, (uint8_t *) ENTER_COMMAND_MODE, sizeof(ENTER_COMMAND_MODE) - 1, 1000);
-	
+
 }
 
 void exit_command_mode() {
@@ -103,7 +113,7 @@ void scan_wifi() {
 void connect_to_wifi(uint8_t *ssid, uint8_t *pass) {
 	uint8_t pass_cmd[50];
 	uint8_t join_cmd[50];
-	
+
 	sprintf((char *) pass_cmd, (const char *)SET_PASSPHRASE, pass);
 	sprintf((char *) join_cmd, (const char *)CONNECT_TO_WIFI, ssid);
 	enter_command_mode();
@@ -115,9 +125,9 @@ void connect_to_wifi(uint8_t *ssid, uint8_t *pass) {
 
 void connect_to_server(uint8_t *ip, uint8_t *port) {
 	uint8_t open_cmd[50];
-	
+
 }
 
 void reboot() {
-	
+
 }

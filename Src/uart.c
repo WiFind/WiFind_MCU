@@ -11,6 +11,7 @@
 #include "uart.h"
 #include "FreeRTOS.h"
 #include "task.h"
+#include <string.h>
 
 
 /*
@@ -60,8 +61,54 @@ void send_command(const uint8_t * command, size_t size) {
 		rx_status = HAL_UART_Receive(&huart1, rx_buffer + i, 1, 20);
 	}
 	rx_status = HAL_UART_Receive(&huart1, rx_buffer + size, 1, 20);
-	
+
 	rx_status = HAL_UART_Receive(&huart1, rx_buffer + size + 1, 13, 1000);
+}
+
+int send_scan_command(void) {
+    int num_of_scan_result = 0;
+    size_t size = sizeof(SCAN) - 1;
+	HAL_StatusTypeDef rx_status;
+	for (size_t i = 0; i < size; i++) {
+		HAL_UART_Transmit(&huart1, (uint8_t *) SCAN + i, 1, 20);
+		rx_status = HAL_UART_Receive(&huart1, rx_buffer + i, 1, 20);
+	}
+	rx_status = HAL_UART_Receive(&huart1, rx_buffer + size, 1, 10);
+
+	rx_status = HAL_UART_Receive(&huart1, rx_buffer + size + 1, 8, 10);
+
+    memset(rx_buffer, 0x00, 2000); // clear the buffer
+
+    int buffer_offset = 0;
+	rx_status = HAL_UART_Receive(&huart1, rx_buffer, 16, 400);
+    buffer_offset += 16;
+
+    if (rx_buffer[12] == 0x20) {
+        /* it discovered less than 10 channel */
+        num_of_scan_result = rx_buffer[13] - '0';
+    } else {
+        /* it discovered more than 9 channel */
+        num_of_scan_result = 10 * (rx_buffer[12] - '0') + rx_buffer[13] - '0';
+    }
+
+    for (int i = 0; i < num_of_scan_result; i++) {
+        rx_status = HAL_UART_Receive(&huart1, rx_buffer + buffer_offset, 42, 80);
+        buffer_offset += 42;
+        for (;;) {
+            /* keep receiving until hitting linefeed */
+            rx_status = HAL_UART_Receive(&huart1, rx_buffer + buffer_offset, 1, 5);
+            buffer_offset++;
+            if (rx_buffer[buffer_offset - 1] == 0x0A) {
+                break;
+            }
+        }
+    }
+
+    /* receive the 'END:\r\n' */
+    rx_status = HAL_UART_Receive(&huart1, rx_buffer + buffer_offset, 6, 20);
+    buffer_offset += 6;
+
+    return buffer_offset; // return the number of bytes received
 }
 
 // public function
@@ -71,7 +118,7 @@ void uart_thread(void const *argument) {
   MX_USART1_UART_Init();
 	button_sem = xSemaphoreCreateBinary();
 	HAL_StatusTypeDef rx_status;
-	
+
 	for (;;) {
 		xSemaphoreTake(button_sem, portMAX_DELAY);
 		osDelay(1000);
@@ -79,30 +126,33 @@ void uart_thread(void const *argument) {
 		//HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_4);
 		//osDelay(500);
 		rx_status = HAL_UART_Receive(&huart1, (uint8_t *) rx_buffer, 5, 500);
-		
+
 		//HAL_UART_Transmit(&huart1, (uint8_t *) SCAN, sizeof(SCAN) - 1, 1000);
 		//osDelay(4000);
 		//HAL_UART_Transmit(&huart1, (uint8_t *) "h", 1, 10);
 		//HAL_UART_Receive(&huart1, rx_buffer, 1, 20);
-		
+
 		//HAL_UART_Transmit(&huart1, (uint8_t *) "hi12", 4, 20);
-		//HAL_UART_Receive(&huart1, rx_buffer + 1, 4, 40); 
+		//HAL_UART_Receive(&huart1, rx_buffer + 1, 4, 40);
 		//rx_status = HAL_UART_Receive(&huart1, (uint8_t *) rx_buffer, 5, 10000);
-		
-		
+
+
 		//huart1.State = HAL_UART_STATE_READY;
-		
+
 		//HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_4);
-		
-		
+
+
 		//send_command(SLEEP, sizeof(SLEEP) - 1);
-		
+
 		send_command(SET_AUTHENTICATION, sizeof(SET_AUTHENTICATION) - 1);
 		send_command(SET_SSID, sizeof(SET_SSID) - 1);
 		send_command(SET_PASSPHRASE, sizeof(SET_PASSPHRASE) - 1);
 		send_command(SET_JOIN_MODE, sizeof(SET_JOIN_MODE) - 1);
 		send_command(SET_DHCP, sizeof(SET_DHCP) -1);
 
+        int temp_test = 0;
+        temp_test = send_scan_command();
+        temp_test++;
 		/*
 		osDelay(300);
 		send_command(ENTER_COMMAND_MODE, sizeof(ENTER_COMMAND_MODE) - 1);
@@ -112,17 +162,17 @@ void uart_thread(void const *argument) {
 		osDelay(300);
 		send_command(TEST_COMMAND, sizeof(TEST_COMMAND) - 1);
 		*/
-		
+
 //		HAL_UART_Transmit(&huart1, (uint8_t *) CONNECT_TO_SERVER, sizeof(CONNECT_TO_SERVER) - 1, 20);
 //		rx_status = HAL_UART_Receive(&huart1, rx_buffer, 3, 100);
 //		HAL_UART_Transmit(&huart1, (uint8_t *) EXIT_COMMAND_MODE, sizeof(EXIT_COMMAND_MODE) - 1, 20);
 //		rx_status = HAL_UART_Receive(&huart1, rx_buffer, 4, 100);
 //		HAL_Delay(10);
-//		
+//
 //		// Talk to server
 //		HAL_UART_Transmit(&huart1, (uint8_t *) TEST_COMMAND, sizeof(TEST_COMMAND) - 1, 100);
 //		// Close connection
-//		
+//
 //		HAL_Delay(300);
 //		HAL_UART_Transmit(&huart1, (uint8_t *) ENTER_COMMAND_MODE, sizeof(ENTER_COMMAND_MODE) - 1, 20);
 //		HAL_Delay(300);
