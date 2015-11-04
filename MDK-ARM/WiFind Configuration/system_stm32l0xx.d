@@ -2,7 +2,7 @@ wifind configuration\system_stm32l0xx.o: ..\Drivers\CMSIS\Device\ST\STM32L0xx\So
 wifind configuration\system_stm32l0xx.o: ..\Drivers\CMSIS\Device\ST\STM32L0xx\Include\stm32l0xx.h
 wifind configuration\system_stm32l0xx.o: ..\Drivers\CMSIS\Device\ST\STM32L0xx\Include\stm32l053xx.h
 wifind configuration\system_stm32l0xx.o: ..\Drivers\CMSIS\Include\core_cm0plus.h
-wifind configuration\system_stm32l0xx.o: C:\Program Files\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+wifind configuration\system_stm32l0xx.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
 wifind configuration\system_stm32l0xx.o: ..\Drivers\CMSIS\Include\core_cmInstr.h
 wifind configuration\system_stm32l0xx.o: ..\Drivers\CMSIS\Include\core_cmFunc.h
 wifind configuration\system_stm32l0xx.o: ..\Drivers\CMSIS\Device\ST\STM32L0xx\Include\system_stm32l0xx.h

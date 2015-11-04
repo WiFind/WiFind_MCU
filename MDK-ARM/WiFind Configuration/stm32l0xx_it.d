@@ -7,7 +7,7 @@ wifind configuration\stm32l0xx_it.o: ..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0
 wifind configuration\stm32l0xx_it.o: ..\Drivers\CMSIS\Device\ST\STM32L0xx\Include\stm32l0xx.h
 wifind configuration\stm32l0xx_it.o: ..\Drivers\CMSIS\Device\ST\STM32L0xx\Include\stm32l053xx.h
 wifind configuration\stm32l0xx_it.o: ..\Drivers\CMSIS\Include\core_cm0plus.h
-wifind configuration\stm32l0xx_it.o: C:\Program Files\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+wifind configuration\stm32l0xx_it.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
 wifind configuration\stm32l0xx_it.o: ..\Drivers\CMSIS\Include\core_cmInstr.h
 wifind configuration\stm32l0xx_it.o: ..\Drivers\CMSIS\Include\core_cmFunc.h
 wifind configuration\stm32l0xx_it.o: ..\Drivers\CMSIS\Device\ST\STM32L0xx\Include\system_stm32l0xx.h
@@ -29,7 +29,7 @@ wifind configuration\stm32l0xx_it.o: ..\Drivers\STM32L0xx_HAL_Driver\Inc\stm32l0
 wifind configuration\stm32l0xx_it.o: ..\Inc\stm32l0xx_it.h
 wifind configuration\stm32l0xx_it.o: ..\Middlewares\Third_Party\FreeRTOS\Source\CMSIS_RTOS\cmsis_os.h
 wifind configuration\stm32l0xx_it.o: ..\Middlewares\Third_Party\FreeRTOS\Source\include\FreeRTOS.h
-wifind configuration\stm32l0xx_it.o: C:\Program Files\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
+wifind configuration\stm32l0xx_it.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
 wifind configuration\stm32l0xx_it.o: ..\Middlewares\Third_Party\FreeRTOS\Source\include\projdefs.h
 wifind configuration\stm32l0xx_it.o: ..\Inc\FreeRTOSConfig.h
 wifind configuration\stm32l0xx_it.o: ..\Inc\mxconstants.h
