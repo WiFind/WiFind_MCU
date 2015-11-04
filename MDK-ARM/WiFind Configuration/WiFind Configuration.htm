@@ -3,7 +3,7 @@
 <title>Static Call Graph - [WiFind Configuration\WiFind Configuration.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image WiFind Configuration\WiFind Configuration.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060020: Last Updated: Tue Nov 03 23:39:55 2015
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060020: Last Updated: Wed Nov 04 04:09:20 2015
 <BR><P>
 <H3>Maximum Stack Usage =        220 bytes + Unknown(Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -246,15 +246,15 @@ Global Symbols
 
 <P><STRONG><a name="[93]"></a>__aeabi_memset8</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, memseta.o(.text), UNUSED)
 
-<P><STRONG><a name="[2b]"></a>__aeabi_memclr</STRONG> (Thumb, 4 bytes, Stack size 0 bytes, memseta.o(.text), UNUSED)
+<P><STRONG><a name="[2b]"></a>__aeabi_memclr</STRONG> (Thumb, 4 bytes, Stack size 0 bytes, memseta.o(.text))
 <BR><BR>[Calls]<UL><LI><a href="#[2c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_memset
 </UL>
-
-<P><STRONG><a name="[7a]"></a>__aeabi_memclr4</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, memseta.o(.text))
-<BR><BR>[Called By]<UL><LI><a href="#[79]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;send_scan_command
+<BR>[Called By]<UL><LI><a href="#[7a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;send_scan_command
 </UL>
 
-<P><STRONG><a name="[94]"></a>__aeabi_memclr8</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, memseta.o(.text), UNUSED)
+<P><STRONG><a name="[94]"></a>__aeabi_memclr4</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, memseta.o(.text), UNUSED)
+
+<P><STRONG><a name="[95]"></a>__aeabi_memclr8</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, memseta.o(.text), UNUSED)
 
 <P><STRONG><a name="[2d]"></a>_memset$wrapper</STRONG> (Thumb, 18 bytes, Stack size 8 bytes, memseta.o(.text), UNUSED)
 <BR><BR>[Calls]<UL><LI><a href="#[2c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_memset
@@ -266,7 +266,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[28]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_main_scatterload
 </UL>
 
-<P><STRONG><a name="[95]"></a>__scatterload_rt2</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, init.o(.text), UNUSED)
+<P><STRONG><a name="[96]"></a>__scatterload_rt2</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, init.o(.text), UNUSED)
 
 <P><STRONG><a name="[c]"></a>EXTI0_1_IRQHandler</STRONG> (Thumb, 10 bytes, Stack size 8 bytes, stm32l0xx_it_1.o(i.EXTI0_1_IRQHandler))
 <BR><BR>[Stack]<UL><LI>Max Depth = 104<LI>Call Chain = EXTI0_1_IRQHandler &rArr; HAL_GPIO_EXTI_IRQHandler &rArr; HAL_GPIO_EXTI_Callback &rArr; xQueueGenericSendFromISR &rArr; prvCopyDataToQueue &rArr; vTaskPriorityDisinherit
@@ -456,8 +456,9 @@ Global Symbols
 </UL>
 <BR>[Calls]<UL><LI><a href="#[49]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART_WaitOnFlagUntilTimeout
 </UL>
-<BR>[Called By]<UL><LI><a href="#[79]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;send_scan_command
-<LI><a href="#[78]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;send_command
+<BR>[Called By]<UL><LI><a href="#[7a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;send_scan_command
+<LI><a href="#[79]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;send_command
+<LI><a href="#[78]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;receive_redudantline
 <LI><a href="#[27]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;uart_thread
 </UL>
 
@@ -466,8 +467,8 @@ Global Symbols
 </UL>
 <BR>[Calls]<UL><LI><a href="#[49]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART_WaitOnFlagUntilTimeout
 </UL>
-<BR>[Called By]<UL><LI><a href="#[79]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;send_scan_command
-<LI><a href="#[78]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;send_command
+<BR>[Called By]<UL><LI><a href="#[7a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;send_scan_command
+<LI><a href="#[79]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;send_command
 <LI><a href="#[27]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;uart_thread
 </UL>
 
@@ -541,11 +542,11 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[44]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART_SetConfig
 </UL>
 
-<P><STRONG><a name="[96]"></a>__scatterload_copy</STRONG> (Thumb, 14 bytes, Stack size unknown bytes, handlers.o(i.__scatterload_copy), UNUSED)
+<P><STRONG><a name="[97]"></a>__scatterload_copy</STRONG> (Thumb, 14 bytes, Stack size unknown bytes, handlers.o(i.__scatterload_copy), UNUSED)
 
-<P><STRONG><a name="[97]"></a>__scatterload_null</STRONG> (Thumb, 2 bytes, Stack size unknown bytes, handlers.o(i.__scatterload_null), UNUSED)
+<P><STRONG><a name="[98]"></a>__scatterload_null</STRONG> (Thumb, 2 bytes, Stack size unknown bytes, handlers.o(i.__scatterload_null), UNUSED)
 
-<P><STRONG><a name="[98]"></a>__scatterload_zeroinit</STRONG> (Thumb, 14 bytes, Stack size unknown bytes, handlers.o(i.__scatterload_zeroinit), UNUSED)
+<P><STRONG><a name="[99]"></a>__scatterload_zeroinit</STRONG> (Thumb, 14 bytes, Stack size unknown bytes, handlers.o(i.__scatterload_zeroinit), UNUSED)
 
 <P><STRONG><a name="[22]"></a>main</STRONG> (Thumb, 64 bytes, Stack size 24 bytes, main_1.o(i.main))
 <BR><BR>[Stack]<UL><LI>Max Depth = 220<LI>Call Chain = main &rArr; SystemClock_Config &rArr; HAL_RCC_ClockConfig &rArr; HAL_InitTick &rArr; HAL_RCC_GetHCLKFreq &rArr; HAL_RCC_GetSysClockFreq &rArr; __aeabi_uidivmod
@@ -604,34 +605,45 @@ Global Symbols
 <BR><BR>[Called By]<UL><LI><a href="#[5b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskGenericCreate
 </UL>
 
-<P><STRONG><a name="[78]"></a>send_command</STRONG> (Thumb, 84 bytes, Stack size 24 bytes, uart.o(i.send_command))
-<BR><BR>[Stack]<UL><LI>Max Depth = 104<LI>Call Chain = send_command &rArr; HAL_UART_Transmit &rArr; UART_WaitOnFlagUntilTimeout
+<P><STRONG><a name="[78]"></a>receive_redudantline</STRONG> (Thumb, 36 bytes, Stack size 8 bytes, uart.o(i.receive_redudantline))
+<BR><BR>[Stack]<UL><LI>Max Depth = 88<LI>Call Chain = receive_redudantline &rArr; HAL_UART_Receive &rArr; UART_WaitOnFlagUntilTimeout
+</UL>
+<BR>[Calls]<UL><LI><a href="#[48]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_UART_Receive
+</UL>
+<BR>[Called By]<UL><LI><a href="#[79]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;send_command
+<LI><a href="#[27]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;uart_thread
+</UL>
+
+<P><STRONG><a name="[79]"></a>send_command</STRONG> (Thumb, 74 bytes, Stack size 24 bytes, uart.o(i.send_command))
+<BR><BR>[Stack]<UL><LI>Max Depth = 112<LI>Call Chain = send_command &rArr; receive_redudantline &rArr; HAL_UART_Receive &rArr; UART_WaitOnFlagUntilTimeout
 </UL>
 <BR>[Calls]<UL><LI><a href="#[4a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_UART_Transmit
 <LI><a href="#[48]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_UART_Receive
+<LI><a href="#[78]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;receive_redudantline
 </UL>
 <BR>[Called By]<UL><LI><a href="#[27]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;uart_thread
 </UL>
 
-<P><STRONG><a name="[79]"></a>send_scan_command</STRONG> (Thumb, 266 bytes, Stack size 24 bytes, uart.o(i.send_scan_command))
+<P><STRONG><a name="[7a]"></a>send_scan_command</STRONG> (Thumb, 266 bytes, Stack size 24 bytes, uart.o(i.send_scan_command))
 <BR><BR>[Stack]<UL><LI>Max Depth = 104<LI>Call Chain = send_scan_command &rArr; HAL_UART_Transmit &rArr; UART_WaitOnFlagUntilTimeout
 </UL>
 <BR>[Calls]<UL><LI><a href="#[4a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_UART_Transmit
 <LI><a href="#[48]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_UART_Receive
-<LI><a href="#[7a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_memclr4
+<LI><a href="#[2b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_memclr
 </UL>
 <BR>[Called By]<UL><LI><a href="#[27]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;uart_thread
 </UL>
 
-<P><STRONG><a name="[27]"></a>uart_thread</STRONG> (Thumb, 296 bytes, Stack size 0 bytes, uart.o(i.uart_thread))
-<BR><BR>[Stack]<UL><LI>Max Depth = 104<LI>Call Chain = uart_thread &rArr; send_scan_command &rArr; HAL_UART_Transmit &rArr; UART_WaitOnFlagUntilTimeout
+<P><STRONG><a name="[27]"></a>uart_thread</STRONG> (Thumb, 304 bytes, Stack size 0 bytes, uart.o(i.uart_thread))
+<BR><BR>[Stack]<UL><LI>Max Depth = 112<LI>Call Chain = uart_thread &rArr; send_command &rArr; receive_redudantline &rArr; HAL_UART_Receive &rArr; UART_WaitOnFlagUntilTimeout
 </UL>
 <BR>[Calls]<UL><LI><a href="#[7c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xQueueGenericReceive
 <LI><a href="#[7b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xQueueGenericCreate
 <LI><a href="#[4a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_UART_Transmit
 <LI><a href="#[48]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_UART_Receive
-<LI><a href="#[79]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;send_scan_command
-<LI><a href="#[78]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;send_command
+<LI><a href="#[7a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;send_scan_command
+<LI><a href="#[79]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;send_command
+<LI><a href="#[78]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;receive_redudantline
 <LI><a href="#[4c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;MX_USART1_UART_Init
 <LI><a href="#[57]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osDelay
 </UL>

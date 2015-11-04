@@ -31,10 +31,12 @@ compiling main.c...
 compiling stm32l0xx_hal_msp.c...
 compiling stm32l0xx_it.c...
 compiling uart.c...
-..\Src\uart.c(58): warning:  #550-D: variable "rx_status" was set but never used
+..\Src\uart.c(59): warning:  #550-D: variable "rx_status" was set but never used
         HAL_StatusTypeDef rx_status;
-..\Src\uart.c(71): warning:  #550-D: variable "rx_status" was set but never used
+..\Src\uart.c(68): warning:  #550-D: variable "rx_status" was set but never used
         HAL_StatusTypeDef rx_status;
+..\Src\uart.c(83): warning:  #550-D: variable "rx_status" was set but never used
+                HAL_StatusTypeDef rx_status;
 ..\Src\uart.c(139): warning:  #550-D: variable "rx_status" was set but never used
         HAL_StatusTypeDef rx_status;
 ..\Src\uart.c(36): warning:  #177-D: variable "TEST_COMMAND" was declared but never referenced
@@ -45,7 +47,7 @@ compiling uart.c...
   static const uint8_t DISCONNECT_FROM_SERVER [] = "close\r\n";
 ..\Src\uart.c(49): warning:  #177-D: variable "SLEEP" was declared but never referenced
   static const uint8_t SLEEP [] = "sleep\r\n";
-..\Src\uart.c: 7 warnings, 0 errors
+..\Src\uart.c: 8 warnings, 0 errors
 compiling stm32l0xx_hal_msp.c...
 compiling stm32l0xx_it.c...
 compiling main.c...
@@ -79,16 +81,16 @@ linking...
 WiFind Configuration\WiFind Configuration.axf: Warning: L6304W: Duplicate input file wifind configuration\stm32l0xx_hal_msp_1.o ignored.
 WiFind Configuration\WiFind Configuration.axf: Warning: L6304W: Duplicate input file wifind configuration\stm32l0xx_it_1.o ignored.
 WiFind Configuration\WiFind Configuration.axf: Warning: L6304W: Duplicate input file wifind configuration\main_1.o ignored.
-Program Size: Code=12112 RO-data=492 RW-data=156 ZI-data=6444  
+Program Size: Code=12160 RO-data=492 RW-data=156 ZI-data=6460  
 Finished: 0 information, 3 warning and 0 error messages.
-"WiFind Configuration\WiFind Configuration.axf" - 0 Error(s), 10 Warning(s).
+"WiFind Configuration\WiFind Configuration.axf" - 0 Error(s), 11 Warning(s).
 
 <h2>Collection of Component include folders:</h2>
   C:\Users\pxh\Documents\GitHub\WiFind_MCU\MDK-ARM\RTE
   C:\Keil_v5\ARM\PACK\Keil\STM32L0xx_DFP\1.3.0\Device\Include
 
 <h2>Collection of Component Files used:</h2>
-Build Time Elapsed:  00:00:06
+Build Time Elapsed:  00:00:07
 </pre>
 </body>
 </html>
