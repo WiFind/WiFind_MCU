@@ -177,10 +177,12 @@ void uart_thread(void const *argument) {
 		rx_status = HAL_UART_Receive(&huart1, (uint8_t *) rx_buffer, 5, 500);
 		int sizeofscan = send_scan_command();
 		send_command(JOIN_WIFIND, sizeof(JOIN_WIFIND) - 1, 13);
-		__HAL_UART_RESET_HANDLE_STATE(&huart1);
+		__HAL_UART_CLEAR_IT(&huart1, UART_CLEAR_OREF);
+		__HAL_UART_SEND_REQ(&huart1, UART_RXDATA_FLUSH_REQUEST);
 		osDelay(1000);
 		send_command(CONNECT_TO_SERVER, sizeof(CONNECT_TO_SERVER) - 1, 13);
-		__HAL_UART_RESET_HANDLE_STATE(&huart1);
+		__HAL_UART_CLEAR_IT(&huart1, UART_CLEAR_OREF);
+		__HAL_UART_SEND_REQ(&huart1, UART_RXDATA_FLUSH_REQUEST);
 		osDelay(300);
 		HAL_UART_Transmit(&huart1, (uint8_t *) rx_buffer, sizeofscan, 1000);
 
