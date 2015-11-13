@@ -36,7 +36,7 @@ UART_HandleTypeDef huart1;
 static const uint8_t TEST_COMMAND [] = "Hello World!";
 static const uint8_t ENTER_COMMAND_MODE [] = "$$$";
 static const uint8_t EXIT_COMMAND_MODE [] = "exit\r\n";
-static const uint8_t CONNECT_TO_SERVER [] = "open 192.168.1.128 8000\r\n";
+static const uint8_t CONNECT_TO_SERVER [] = "open 192.168.1.4 8000\r\n";
 static const uint8_t DISCONNECT_FROM_SERVER [] = "close\r\n";
 static const uint8_t SET_DHCP [] = "set ip dhcp 1\r\n";
 static const uint8_t SET_AUTHENTICATION [] = "set wlan auth 4\r\n";
@@ -141,7 +141,11 @@ void uart_thread(void const *argument) {
 	for (;;) {
 		xSemaphoreTake(button_sem, portMAX_DELAY);
 		osDelay(1000);
+		
 		HAL_UART_Transmit(&huart1, (uint8_t *) ENTER_COMMAND_MODE, sizeof(ENTER_COMMAND_MODE) - 1, 1000);
+		__HAL_UART_CLEAR_IT(&huart1, UART_CLEAR_OREF);
+    __HAL_UART_SEND_REQ(&huart1, UART_RXDATA_FLUSH_REQUEST);
+
 		//HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_4);
 		//osDelay(500);
 		rx_status = HAL_UART_Receive(&huart1, (uint8_t *) rx_buffer, 5, 500);
