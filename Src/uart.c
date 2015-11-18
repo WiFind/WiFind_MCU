@@ -85,11 +85,11 @@ void send_command(const uint8_t * command, size_t size, size_t line_num) {
 	HAL_StatusTypeDef rx_status;
 	for (size_t i = 0; i < size; i++) {
 		HAL_UART_Transmit(&huart1, (uint8_t *) command + i, 1, 20);
-		rx_status = HAL_UART_Receive(&huart1, (uint8_t *) buf, 1, 20);
+		//rx_status = HAL_UART_Receive(&huart1, (uint8_t *) buf, 1, 20);
 	}
-	rx_status = HAL_UART_Receive(&huart1, (uint8_t *) buf, 1, 20);
+	//rx_status = HAL_UART_Receive(&huart1, (uint8_t *) buf, 1, 20);
 	for (size_t i = 0; i < line_num; i++) {
-		receive_redudantline();
+		//receive_redudantline();
 	}
 }
 
@@ -160,12 +160,12 @@ void uart_thread(void const *argument) {
 		osDelay(1000);
 		
 		HAL_UART_Transmit(&huart1, (uint8_t *) ENTER_COMMAND_MODE, sizeof(ENTER_COMMAND_MODE) - 1, 1000);
-		//__HAL_UART_CLEAR_IT(&huart1, UART_CLEAR_OREF);
-    //__HAL_UART_SEND_REQ(&huart1, UART_RXDATA_FLUSH_REQUEST);
+		__HAL_UART_CLEAR_IT(&huart1, UART_CLEAR_OREF);
+    	__HAL_UART_SEND_REQ(&huart1, UART_RXDATA_FLUSH_REQUEST);
 
 		//HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_4);
-		//osDelay(500);
-		rx_status = HAL_UART_Receive(&huart1, (uint8_t *) rx_buffer, 5, 500);
+		osDelay(500);
+		//rx_status = HAL_UART_Receive(&huart1, (uint8_t *) rx_buffer, 5, 500);
 
 		//HAL_UART_Transmit(&huart1, (uint8_t *) SCAN, sizeof(SCAN) - 1, 1000);
 		//osDelay(4000);
@@ -185,32 +185,38 @@ void uart_thread(void const *argument) {
 		//send_command(SLEEP, sizeof(SLEEP) - 1);
 
 		send_command(SET_AUTHENTICATION, sizeof(SET_AUTHENTICATION) - 1, 2);
+		osDelay(300);
 		send_command(SET_SSID, sizeof(SET_SSID) - 1, 2);
+		osDelay(300);
 		send_command(SET_PASSPHRASE, sizeof(SET_PASSPHRASE) - 1, 2);
+		osDelay(300);
 		send_command(SET_JOIN_MODE, sizeof(SET_JOIN_MODE) - 1, 2);
+		osDelay(300);
 		send_command(SET_DHCP, sizeof(SET_DHCP) -1, 2);
+		osDelay(300);
 		send_command(SAVE, sizeof(SAVE) - 1, 2);
-		osDelay(100);
+		osDelay(300);
 		send_command(REBOOT, sizeof(REBOOT) - 1, 0);
+		osDelay(300);
 		rx_status = HAL_UART_Receive(&huart1, (uint8_t *) buf, 8, 500);
 		osDelay(100);
-		for (size_t i = 0; i < 3; i++) {
-			receive_redudantline();
-	  }
+		
 		osDelay(300);
 		//enter command mode
 		HAL_UART_Transmit(&huart1, (uint8_t *) ENTER_COMMAND_MODE, sizeof(ENTER_COMMAND_MODE) - 1, 1000);
-		rx_status = HAL_UART_Receive(&huart1, (uint8_t *) buf, 5, 500);
+		osDelay(500);
+		__HAL_UART_CLEAR_IT(&huart1, UART_CLEAR_OREF);
+    	__HAL_UART_SEND_REQ(&huart1, UART_RXDATA_FLUSH_REQUEST);
+
 		int sizeofscan = send_scan_command();
 		send_command(JOIN_WIFIND, sizeof(JOIN_WIFIND) - 1, 12);
 		//__HAL_UART_CLEAR_IT(&huart1, UART_CLEAR_OREF);
 		//__HAL_UART_SEND_REQ(&huart1, UART_RXDATA_FLUSH_REQUEST);
-		osDelay(1000);
+		osDelay(5000);
 		send_command(CONNECT_TO_SERVER, sizeof(CONNECT_TO_SERVER) - 1, 1);
-		rx_status = HAL_UART_Receive(&huart1, (uint8_t *) buf, 6, 500);
 		//__HAL_UART_CLEAR_IT(&huart1, UART_CLEAR_OREF);
 	  //__HAL_UART_SEND_REQ(&huart1, UART_RXDATA_FLUSH_REQUEST);
-		osDelay(300);
+		osDelay(1000);
 		int sizeofhead = head_pkt(2, sizeofscan);
 		HAL_UART_Transmit(&huart1, (uint8_t *) head, sizeofhead, 1000);
 		HAL_UART_Transmit(&huart1, (uint8_t *) rx_buffer, sizeofscan, 1000);
@@ -227,24 +233,6 @@ void uart_thread(void const *argument) {
 		send_command(TEST_COMMAND, sizeof(TEST_COMMAND) - 1);
 		*/
 
-//		HAL_UART_Transmit(&huart1, (uint8_t *) CONNECT_TO_SERVER, sizeof(CONNECT_TO_SERVER) - 1, 20);
-//		rx_status = HAL_UART_Receive(&huart1, rx_buffer, 3, 100);
-//		HAL_UART_Transmit(&huart1, (uint8_t *) EXIT_COMMAND_MODE, sizeof(EXIT_COMMAND_MODE) - 1, 20);
-//		rx_status = HAL_UART_Receive(&huart1, rx_buffer, 4, 100);
-//		HAL_Delay(10);
-//
-//		// Talk to server
-//		HAL_UART_Transmit(&huart1, (uint8_t *) TEST_COMMAND, sizeof(TEST_COMMAND) - 1, 100);
-//		// Close connection
-//
-//		HAL_Delay(300);
-//		HAL_UART_Transmit(&huart1, (uint8_t *) ENTER_COMMAND_MODE, sizeof(ENTER_COMMAND_MODE) - 1, 20);
-//		HAL_Delay(300);
-//		rx_status = HAL_UART_Receive(&huart1, rx_buffer, 3, 100);
-//		HAL_UART_Transmit(&huart1, (uint8_t *) DISCONNECT_FROM_SERVER, sizeof(DISCONNECT_FROM_SERVER) - 1, 20);
-//		rx_status = HAL_UART_Receive(&huart1, rx_buffer, 3, 100);
-//		HAL_UART_Transmit(&huart1, (uint8_t *) EXIT_COMMAND_MODE, sizeof(EXIT_COMMAND_MODE) - 1, 20);
-//		rx_status = HAL_UART_Receive(&huart1, rx_buffer, 4, 100);
 	}
 }
 
