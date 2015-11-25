@@ -62,6 +62,7 @@ static uint8_t flag;
 static void MX_USART1_UART_Init(void);
 
 xSemaphoreHandle button_sem;
+bool uart_gb_message_processing;
 /*
  * priority 1 is emergency, 2 is periodic message, size is the size of scan fingerprint
  * return the size of the char
@@ -165,43 +166,47 @@ int send_scan_command(void) {
 // public function
 void uart_thread(void const *argument) {
 	// This function assumes that wireless addresses and such have been set already.
-	osDelay(1000);
-  MX_USART1_UART_Init();
+
+	//osDelay(1000);
+    MX_USART1_UART_Init();
 	button_sem = xSemaphoreCreateBinary();
 	HAL_StatusTypeDef rx_status;
 
-		HAL_UART_Transmit(&huart1, (uint8_t *) ENTER_COMMAND_MODE, sizeof(ENTER_COMMAND_MODE) - 1, 1000);
-		__HAL_UART_CLEAR_IT(&huart1, UART_CLEAR_OREF);
-    	__HAL_UART_SEND_REQ(&huart1, UART_RXDATA_FLUSH_REQUEST);
+    HAL_UART_Transmit(&huart1, (uint8_t *) ENTER_COMMAND_MODE, sizeof(ENTER_COMMAND_MODE) - 1, 1000);
+    __HAL_UART_CLEAR_IT(&huart1, UART_CLEAR_OREF);
+    __HAL_UART_SEND_REQ(&huart1, UART_RXDATA_FLUSH_REQUEST);
 
-		//HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_4);
-		osDelay(500);
-		get_mac_address();
-		osDelay(100);
-		send_command(SET_AUTHENTICATION, sizeof(SET_AUTHENTICATION) - 1, 2);
-	//	osDelay(300);
+    //HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_4);
+    osDelay(500);
+    get_mac_address();
+    osDelay(100);
+    send_command(SET_AUTHENTICATION, sizeof(SET_AUTHENTICATION) - 1, 2);
+//	osDelay(300);
 //		send_command(SET_SSID, sizeof(SET_SSID) - 1, 2);
-	//	osDelay(300);
-	//	send_command(SET_PASSPHRASE, sizeof(SET_PASSPHRASE) - 1, 2);
-		osDelay(800);
-		send_command(SET_JOIN_MODE, sizeof(SET_JOIN_MODE) - 1, 2);
-		osDelay(300);
-		send_command(SET_DHCP, sizeof(SET_DHCP) -1, 2);
-		osDelay(300);
-		send_command(SAVE, sizeof(SAVE) - 1, 2);
-		osDelay(300);
-		send_command(REBOOT, sizeof(REBOOT) - 1, 0);
-		osDelay(300);
-		//rx_status = HAL_UART_Receive(&huart1, (uint8_t *) buf, 8, 500);
-		osDelay(100);
+//	osDelay(300);
+//	send_command(SET_PASSPHRASE, sizeof(SET_PASSPHRASE) - 1, 2);
+    osDelay(800);
+    send_command(SET_JOIN_MODE, sizeof(SET_JOIN_MODE) - 1, 2);
+    osDelay(300);
+    send_command(SET_DHCP, sizeof(SET_DHCP) -1, 2);
+    osDelay(300);
+    send_command(SAVE, sizeof(SAVE) - 1, 2);
+    osDelay(300);
+    send_command(REBOOT, sizeof(REBOOT) - 1, 0);
+    osDelay(300);
+    //rx_status = HAL_UART_Receive(&huart1, (uint8_t *) buf, 8, 500);
+    osDelay(100);
+    // initialize the global variable to false
+    uart_gb_message_processing = false;
 
 	for (;;) {
 		signed portBASE_TYPE semaphore_status;
     bool b_emergency_button_pushed = false;
 		semaphore_status = xSemaphoreTake(button_sem, (portTickType) 10000);
-        if (semaphore_status == pdTRUE) {
-            b_emergency_button_pushed = true;
-        }
+    b_emergency_button_pushed = true;
+    if (semaphore_status == pdTRUE) {
+        b_emergency_button_pushed = true;
+     }
 		osDelay(1000);
 
 

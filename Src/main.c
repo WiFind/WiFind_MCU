@@ -35,6 +35,8 @@
 #include "cmsis_os.h"
 #include "semphr.h"
 #include "uart.h"
+#include "button.h"
+
 
 /* USER CODE BEGIN Includes */
 
@@ -42,7 +44,7 @@
 
 /* Private variables ---------------------------------------------------------*/
 
-osThreadId defaultTaskHandle, uart_task_handle;
+osThreadId defaultTaskHandle, uart_task_handle, button_task_handle;
 
 /* USER CODE BEGIN PV */
 /* Private variables ---------------------------------------------------------*/
@@ -53,6 +55,7 @@ osThreadId defaultTaskHandle, uart_task_handle;
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 void StartDefaultTask(void const * argument);
+
 
 /* USER CODE BEGIN PFP */
 /* Private function prototypes -----------------------------------------------*/
@@ -103,10 +106,13 @@ int main(void)
   /* definition and creation of defaultTask */
   //osThreadDef(defaultTask, StartDefaultTask, osPriorityNormal, 0, 128);
   //defaultTaskHandle = osThreadCreate(osThread(defaultTask), NULL);
-	
-	osThreadDef(uart_task, uart_thread, osPriorityNormal, 0, 500);
+
+  // TODO: make the total stack size allowable bigger. It seems that it is currently set to 500.
+	osThreadDef(uart_task, uart_thread, osPriorityNormal, 0, 450);
 	uart_task_handle = osThreadCreate(osThread(uart_task), NULL);
 
+	osThreadDef(button_task, button_thread, osPriorityNormal, 0, 50);
+	button_task_handle = osThreadCreate(osThread(button_task), NULL);
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
   /* USER CODE END RTOS_THREADS */
@@ -114,11 +120,11 @@ int main(void)
   /* USER CODE BEGIN RTOS_QUEUES */
   /* add queues, ... */
   /* USER CODE END RTOS_QUEUES */
- 
+
 
   /* Start scheduler */
   osKernelStart(NULL, NULL);
-  
+
   /* We should never get here as control is now taken by the scheduler */
 
   /* Infinite loop */
@@ -177,16 +183,16 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
   if(GPIO_Pin == GPIO_PIN_0)
   {
-    /* Toggle Green LED */
-    HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_4);
-		xSemaphoreGiveFromISR(button_sem, NULL);
+    // let the button_thread to determine if this is a long press or not
+    HAL_NVIC_DisableIRQ(EXTI0_1_IRQn);
+    xSemaphoreGiveFromISR(raw_button_sem, NULL);
   }
-  
+
 }
 
-/** Configure pins as 
-        * Analog 
-        * Input 
+/** Configure pins as
+        * Analog
+        * Input
         * Output
         * EVENT_OUT
         * EXTI
@@ -219,7 +225,6 @@ void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_LOW;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
-
 }
 
 /* USER CODE BEGIN 4 */
@@ -236,7 +241,7 @@ void StartDefaultTask(void const * argument)
   {
     osDelay(1);
   }
-  /* USER CODE END 5 */ 
+  /* USER CODE END 5 */
 }
 
 #ifdef USE_FULL_ASSERT
@@ -261,10 +266,10 @@ void assert_failed(uint8_t* file, uint32_t line)
 
 /**
   * @}
-  */ 
+  */
 
 /**
   * @}
-*/ 
+*/
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
