@@ -38,7 +38,7 @@ UART_HandleTypeDef huart1;
 static const uint8_t TEST_COMMAND [] = "Hello World!";
 static const uint8_t ENTER_COMMAND_MODE [] = "$$$";
 static const uint8_t EXIT_COMMAND_MODE [] = "exit\r\n";
-static const uint8_t CONNECT_TO_SERVER [] = "open 192.241.160.33 9000\r\n";
+static const uint8_t CONNECT_TO_SERVER [] = "open 192.241.160.33 8000\r\n";
 static const uint8_t DISCONNECT_FROM_SERVER [] = "close\r\n";
 static const uint8_t SET_DHCP [] = "set ip dhcp 1\r\n";
 static const uint8_t SET_AUTHENTICATION [] = "set wlan auth 0\r\n";
@@ -199,7 +199,7 @@ void uart_thread(void const *argument) {
 		signed portBASE_TYPE semaphore_status;
         int b_emergency_button_pushed = 2;
         uart_gb_message_processing = false;
-		semaphore_status = xSemaphoreTake(button_sem, (portTickType) 10000);
+		semaphore_status = xSemaphoreTake(button_sem, (portTickType) 30000);
         if (semaphore_status == pdTRUE) {
             if (uart_gb_cancel) {
                 b_emergency_button_pushed = 3;
@@ -207,15 +207,15 @@ void uart_thread(void const *argument) {
                 b_emergency_button_pushed = 1;
             }
         }
-		osDelay(1000);
+		osDelay(300);
 
-
+		HAL_UART_Transmit(&huart1, (uint8_t *) 'F', sizeof('F'), 1000);
 		osDelay(300);
 		//enter command mode
 		HAL_UART_Transmit(&huart1, (uint8_t *) ENTER_COMMAND_MODE, sizeof(ENTER_COMMAND_MODE) - 1, 1000);
 		osDelay(500);
 		__HAL_UART_CLEAR_IT(&huart1, UART_CLEAR_OREF);
-    __HAL_UART_SEND_REQ(&huart1, UART_RXDATA_FLUSH_REQUEST);
+        __HAL_UART_SEND_REQ(&huart1, UART_RXDATA_FLUSH_REQUEST);
 
 		int sizeofscan = send_scan_command();
 		send_command(JOIN_MSETUP, sizeof(JOIN_MSETUP) - 1, 12);
@@ -231,7 +231,7 @@ void uart_thread(void const *argument) {
 		HAL_UART_Transmit(&huart1, (uint8_t *) rx_buffer, sizeofscan, 1000);
 		osDelay(1000);
 		__HAL_UART_CLEAR_IT(&huart1, UART_CLEAR_OREF);
-    __HAL_UART_SEND_REQ(&huart1, UART_RXDATA_FLUSH_REQUEST);
+        __HAL_UART_SEND_REQ(&huart1, UART_RXDATA_FLUSH_REQUEST);
 		//rx_status = HAL_UART_Receive(&huart1, (uint8_t *) &flag, 1, 2000);
 		osDelay(500);
 		HAL_UART_Transmit(&huart1, (uint8_t *) ENTER_COMMAND_MODE, sizeof(ENTER_COMMAND_MODE) - 1, 1000);
@@ -239,18 +239,8 @@ void uart_thread(void const *argument) {
 		send_command(CLOSE_SOCKET, sizeof(CLOSE_SOCKET) - 1, 1);
 		osDelay(100);
 		send_command(LEAVE, sizeof(LEAVE) - 1, 1);
-		send_command(REBOOT, sizeof(REBOOT) - 1, 0);
+		send_command(SLEEP, sizeof(SLEEP) - 1, 0);
 		osDelay(300);
-		/*
-		osDelay(300);
-		send_command(ENTER_COMMAND_MODE, sizeof(ENTER_COMMAND_MODE) - 1);
-		send_command(JOIN_WIFIND, sizeof(JOIN_WIFIND) - 1);
-		osDelay(6000);
-		send_command(CONNECT_TO_SERVER, sizeof(CONNECT_TO_SERVER) - 1);
-		osDelay(300);
-		send_command(TEST_COMMAND, sizeof(TEST_COMMAND) - 1);
-		*/
-
 	}
 }
 
