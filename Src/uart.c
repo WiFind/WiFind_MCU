@@ -38,7 +38,7 @@ UART_HandleTypeDef huart1;
 static const uint8_t TEST_COMMAND [] = "Hello World!";
 static const uint8_t ENTER_COMMAND_MODE [] = "$$$";
 static const uint8_t EXIT_COMMAND_MODE [] = "exit\r\n";
-static const uint8_t CONNECT_TO_SERVER [] = "open 192.241.160.33 8000\r\n";
+static const uint8_t CONNECT_TO_SERVER [] = "open 192.241.160.33 9000\r\n";
 static const uint8_t DISCONNECT_FROM_SERVER [] = "close\r\n";
 static const uint8_t SET_DHCP [] = "set ip dhcp 1\r\n";
 static const uint8_t SET_AUTHENTICATION [] = "set wlan auth 0\r\n";
@@ -63,20 +63,18 @@ static void MX_USART1_UART_Init(void);
 
 xSemaphoreHandle button_sem;
 bool uart_gb_message_processing;
+bool uart_gb_cancel = false;
+
 /*
  * priority 1 is emergency, 2 is periodic message, size is the size of scan fingerprint
  * return the size of the char
  */
-int head_pkt(bool priority, int sizeofscan){
+int head_pkt(int priority, int sizeofscan){
     memcpy(head, MAC_ADDRESS, 17);
     head[17] = ' ';
 
-    if (priority) {
-        head[18] = '1';
-    } else {
-        head[18] = '2';
-    }
-		head[19] = ' ';
+    head[18] = '0' + priority;
+    head[19] = ' ';
 	int ret = 20;
 	while (sizeofscan){
 		head[ret] = '0' + sizeofscan%10;
@@ -197,16 +195,18 @@ void uart_thread(void const *argument) {
     //rx_status = HAL_UART_Receive(&huart1, (uint8_t *) buf, 8, 500);
     osDelay(100);
     // initialize the global variable to false
-    uart_gb_message_processing = false;
-
 	for (;;) {
 		signed portBASE_TYPE semaphore_status;
-    bool b_emergency_button_pushed = false;
+        int b_emergency_button_pushed = 2;
+        uart_gb_message_processing = false;
 		semaphore_status = xSemaphoreTake(button_sem, (portTickType) 10000);
-    b_emergency_button_pushed = true;
-    if (semaphore_status == pdTRUE) {
-        b_emergency_button_pushed = true;
-     }
+        if (semaphore_status == pdTRUE) {
+            if (uart_gb_cancel) {
+                b_emergency_button_pushed = 3;
+            } else {
+                b_emergency_button_pushed = 1;
+            }
+        }
 		osDelay(1000);
 
 

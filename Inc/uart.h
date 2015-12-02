@@ -10,6 +10,7 @@
 
 extern xSemaphoreHandle button_sem;
 extern bool uart_gb_message_processing;
+extern bool uart_gb_cancel;
 
 void uart_thread(void const *);
 

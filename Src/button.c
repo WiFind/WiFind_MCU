@@ -35,18 +35,23 @@ void button_thread(void const *argument) {
                 // poll the level of PA0 to see if it stays high or not
                 // TODO: change the following to GPIO_PIN_SET because the board
                 // use logic low instead of logic high for button push
+                osDelay(500);
                 if (HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0) == GPIO_PIN_RESET) {
                     // if level changs to high, declare it as a short push
                     button_gb_short_push = true;
                     break;
                 }
-                osDelay(500);
             }
-        }
-        if (button_gb_short_push) {
-            HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_4);
-        } else {
-            HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
+            if (button_gb_short_push) {
+                uart_gb_cancel = false;
+                HAL_GPIO_WritePin(GPIOA, GPIO_PIN_6, GPIO_PIN_SET);
+                HAL_GPIO_WritePin(GPIOB, GPIO_PIN_1, GPIO_PIN_SET);
+            } else {
+                uart_gb_cancel = true;
+                HAL_GPIO_WritePin(GPIOA, GPIO_PIN_6, GPIO_PIN_RESET);
+                HAL_GPIO_WritePin(GPIOB, GPIO_PIN_1, GPIO_PIN_RESET);
+            }
+            xSemaphoreGive(button_sem);
         }
     }
 }

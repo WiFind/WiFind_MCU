@@ -181,10 +181,9 @@ void SystemClock_Config(void)
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
-  if(GPIO_Pin == GPIO_PIN_0)
+  if(GPIO_Pin == GPIO_PIN_0 && osThreadGetId() != button_task_handle)
   {
     // let the button_thread to determine if this is a long press or not
-    HAL_NVIC_DisableIRQ(EXTI0_1_IRQn);
     xSemaphoreGiveFromISR(raw_button_sem, NULL);
   }
 
