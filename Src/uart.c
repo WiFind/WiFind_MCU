@@ -118,10 +118,11 @@ int send_scan_command(void) {
 	}
 	rx_status = HAL_UART_Receive(&huart1, rx_buffer + size, 1, 10);
 
-	rx_status = HAL_UART_Receive(&huart1, rx_buffer + size + 1, 8, 10);
+	rx_status = HAL_UART_Receive(&huart1, rx_buffer + size + 1, 8, 200);
 
   memset(rx_buffer, 0x00, 2000); // clear the buffer
-
+   __HAL_UART_CLEAR_IT(&huart1, UART_CLEAR_OREF);
+        __HAL_UART_SEND_REQ(&huart1, UART_RXDATA_FLUSH_REQUEST);
     int buffer_offset = 0;
 	rx_status = HAL_UART_Receive(&huart1, rx_buffer, 13, 400);
 	buffer_offset = 13;
@@ -165,7 +166,7 @@ int send_scan_command(void) {
 void uart_thread(void const *argument) {
 	// This function assumes that wireless addresses and such have been set already.
 
-	//osDelay(1000);
+	  osDelay(1000);
     MX_USART1_UART_Init();
 	button_sem = xSemaphoreCreateBinary();
 	HAL_StatusTypeDef rx_status;
@@ -199,7 +200,9 @@ void uart_thread(void const *argument) {
 		signed portBASE_TYPE semaphore_status;
         int b_emergency_button_pushed = 2;
         uart_gb_message_processing = false;
-		semaphore_status = xSemaphoreTake(button_sem, (portTickType) 30000);
+		semaphore_status = xSemaphoreTake(button_sem, portMAX_DELAY);
+		//semaphore_status = xSemaphoreTake(button_sem, (portTickType) 10000);
+		HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_4);
         if (semaphore_status == pdTRUE) {
             if (uart_gb_cancel) {
                 b_emergency_button_pushed = 3;
@@ -239,7 +242,7 @@ void uart_thread(void const *argument) {
 		send_command(CLOSE_SOCKET, sizeof(CLOSE_SOCKET) - 1, 1);
 		osDelay(100);
 		send_command(LEAVE, sizeof(LEAVE) - 1, 1);
-		send_command(SLEEP, sizeof(SLEEP) - 1, 0);
+		send_command(REBOOT, sizeof(REBOOT) - 1, 0);
 		osDelay(300);
 	}
 }
