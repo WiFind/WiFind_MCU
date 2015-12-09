@@ -66,15 +66,15 @@ bool uart_gb_message_processing;
 bool uart_gb_cancel = false;
 
 /*
- * priority 1 is emergency, 2 is periodic message, size is the size of scan fingerprint
+ * priority 1 is emergency, 2 is periodic message, 3 is the cancell message, size is the size of scan fingerprint
  * return the size of the char
  */
 int head_pkt(int priority, int sizeofscan){
-        memcpy(head, MAC_ADDRESS, 17);
-        head[17] = ' ';
+    memcpy(head, MAC_ADDRESS, 17);
+    head[17] = ' ';
 
-        head[18] = '0' + priority;
-        head[19] = ' ';
+    head[18] = '0' + priority;
+    head[19] = ' ';
     int ret = 20;
     while (sizeofscan){
         head[ret] = '0' + sizeofscan%10;
@@ -84,12 +84,20 @@ int head_pkt(int priority, int sizeofscan){
     return ret;
 }
 
+/*
+ * Send the command
+ */
+
 void send_command(const uint8_t * command, size_t size, size_t line_num) {
     HAL_StatusTypeDef rx_status;
     for (size_t i = 0; i < size; i++) {
         HAL_UART_Transmit(&huart1, (uint8_t *) command + i, 1, 20);
     }
 }
+
+/*
+ * Get the mac address of the Wifly, as the unique identifier
+ */
 
 void get_mac_address(void) {
     __HAL_UART_CLEAR_IT(&huart1, UART_CLEAR_OREF);
@@ -106,6 +114,11 @@ void get_mac_address(void) {
     }
     rx_status = HAL_UART_Receive(&huart1, MAC_ADDRESS, 18, 100);
 }
+
+/*
+ * Send the scan command and get back the fingerprint based from the Wifly. Store at rx_buffer
+ * Return the size of the fingerprint
+ */
 
 int send_scan_command(void) {
     int num_of_scan_result = 0;
@@ -126,50 +139,46 @@ int send_scan_command(void) {
     rx_status = HAL_UART_Receive(&huart1, rx_buffer, 13, 400);
     buffer_offset = 13;
 
+    for (;;) {
+        rx_status = HAL_UART_Receive(&huart1, rx_buffer + buffer_offset, 1, 5);
+        buffer_offset += 1;
+        if (rx_buffer[buffer_offset - 1] == 0x0A) {
+                break;
+        }
+    }
+
+    if (rx_buffer[14] == 0x0D) {
+            /* it discovered less than 10 channel */
+            num_of_scan_result = rx_buffer[13] - '0';
+    } else {
+            /* it discovered more than 9 channel */
+            num_of_scan_result = 10 * (rx_buffer[13] - '0') + rx_buffer[14] - '0';
+    }
+    for (int i = 0; i < num_of_scan_result; i++) {
+        rx_status = HAL_UART_Receive(&huart1, rx_buffer + buffer_offset, 42, 80);
+        buffer_offset += 42;
         for (;;) {
+            /* keep receiving until hitting linefeed */
             rx_status = HAL_UART_Receive(&huart1, rx_buffer + buffer_offset, 1, 5);
-            buffer_offset += 1;
+            buffer_offset++;
             if (rx_buffer[buffer_offset - 1] == 0x0A) {
                     break;
             }
         }
+    }
 
-        if (rx_buffer[14] == 0x0D) {
-                /* it discovered less than 10 channel */
-                num_of_scan_result = rx_buffer[13] - '0';
-        } else {
-                /* it discovered more than 9 channel */
-                num_of_scan_result = 10 * (rx_buffer[13] - '0') + rx_buffer[14] - '0';
-        }
-        for (int i = 0; i < num_of_scan_result; i++) {
-            rx_status = HAL_UART_Receive(&huart1, rx_buffer + buffer_offset, 42, 80);
-            buffer_offset += 42;
-            for (;;) {
-                /* keep receiving until hitting linefeed */
-                rx_status = HAL_UART_Receive(&huart1, rx_buffer + buffer_offset, 1, 5);
-                buffer_offset++;
-                if (rx_buffer[buffer_offset - 1] == 0x0A) {
-                        break;
-                }
-            }
-        }
+    /* receive the 'END:\r\n' */
+    rx_status = HAL_UART_Receive(&huart1, rx_buffer + buffer_offset, 6, 20);
+    buffer_offset += 6;
 
-        /* receive the 'END:\r\n' */
-        rx_status = HAL_UART_Receive(&huart1, rx_buffer + buffer_offset, 6, 20);
-        buffer_offset += 6;
-
-        return buffer_offset; // return the number of bytes received
+    return buffer_offset; // return the number of bytes received
 }
 
-// public function
-void uart_thread(void const *argument) {
-    // This function assumes that wireless addresses and such have been set already.
+/*
+ * Setup the wifly parameter so that it can connect to MSetup
+ */
 
-    osDelay(1000);
-    MX_USART1_UART_Init();
-    button_sem = xSemaphoreCreateBinary();
-    HAL_StatusTypeDef rx_status;
-
+void setup_wifly_config() {
     HAL_UART_Transmit(&huart1, (uint8_t *) ENTER_COMMAND_MODE, sizeof(ENTER_COMMAND_MODE) - 1, 1000);
     __HAL_UART_CLEAR_IT(&huart1, UART_CLEAR_OREF);
     __HAL_UART_SEND_REQ(&huart1, UART_RXDATA_FLUSH_REQUEST);
@@ -189,6 +198,18 @@ void uart_thread(void const *argument) {
     osDelay(300);
     send_command(REBOOT, sizeof(REBOOT) - 1, 0);
     osDelay(300);
+}
+
+// public function
+void uart_thread(void const *argument) {
+    // This function assumes that wireless addresses and such have been set already.
+
+    osDelay(1000);
+    MX_USART1_UART_Init();
+    button_sem = xSemaphoreCreateBinary();
+    HAL_StatusTypeDef rx_status;
+
+    setup_wifly_config();
     for (;;) {
         signed portBASE_TYPE semaphore_status;
         int b_emergency_button_pushed = 2;
