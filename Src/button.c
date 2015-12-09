@@ -22,17 +22,17 @@ bool button_gb_short_push;
 // public function
 void button_thread(void const *argument) {
     raw_button_sem = xSemaphoreCreateBinary();
-		portTickType current = 0;
+        portTickType current = 0;
     for (;;) {
         // wait forever for a falling edge
-			
+            
         xSemaphoreTake(raw_button_sem, portMAX_DELAY);
-			  portTickType temp = xTaskGetTickCount();
-				if ((temp - current) * portTICK_RATE_MS < 1000) {
-					current = temp;
-					continue;
-				}
-				current = temp;
+        portTickType temp = xTaskGetTickCount();
+        if ((temp - current) * portTICK_RATE_MS < 1000) {
+            current = temp;
+            continue;
+        }
+        current = temp;
         if (!uart_gb_message_processing) {
             // do the following only if the uart thread is not processing a push
             // button message
